@@ -13,10 +13,24 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->text('name');
+            $table->text('middle_name')->nullable();
+            $table->string('last_name');
+            $table->text('extension')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+                   
+            $table->boolean('is_trainer')->default(false);
+            $table->boolean('is_course_admin')->default(false);
+            $table->boolean('is_trainee')->default(false);
+            $table->boolean('is_director')->default(false);
+            $table->boolean('is_employer_company_user')->default(false);
+            // Add column for employer company id
+            $table->string('uuid')->unique();
+
+
             $table->rememberToken();
             $table->timestamps();
         });

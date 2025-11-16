@@ -1,0 +1,11 @@
+{
+    "name": "PerformanceAdministration",
+    "alias": "performanceadministration",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\PerformanceAdministration\\Providers\\PerformanceAdministrationServiceProvider"
+    ],
+    "files": []
+}
