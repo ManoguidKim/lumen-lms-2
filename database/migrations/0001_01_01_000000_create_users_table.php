@@ -26,7 +26,8 @@ return new class extends Migration
             $table->boolean('is_course_admin')->default(false);
             $table->boolean('is_trainee')->default(false);
             $table->boolean('is_director')->default(false);
-            $table->boolean('is_employer_company_user')->default(false);
+            $table->boolean('is_super_admin')->default(false);
+            $table->string('user_type')->comment('Based on UserTypeEnum Internal, EmployerUser, Student');
             // Add column for employer company id
             $table->string('uuid')->unique();
 

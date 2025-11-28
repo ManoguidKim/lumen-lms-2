@@ -39,6 +39,8 @@ This application is developed and optimized for a server with the following spec
 
 ## Style
 
+-   Use Livewire within views used by Controller methods. Do **not** route directly to Livewire classes.
+
 -   The project uses [Laravel Modules](https://laravelmodules.com/) to segregate large chunks of files into functional groups.
 
     -   Migrations, models, controllers, and policies must be placed in their respective module folders. However, frontend files (e.g., Livewire classes and view files) shall be placed in corresponding module folders in the app folder, not in their module folders. For example, the Training model which is part of the Training module will be in `modules\Training\app\models\Training` while the Livewire files CreateTrainingLivewire.php and create-training-livewire.php files will be in `app\Livewire\Training` and `resources\views\livewire\training` folders, respectively.
@@ -82,6 +84,8 @@ Except for the original model and migration files of Laravel, the model, control
 4. Assessment Module
 
     a. TrainingCourseAssessmentRequirements
+
+    b. StudentAssessmentPerformance
 
 5. Employer Module
 
