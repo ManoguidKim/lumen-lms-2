@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('training_schedule_items', function (Blueprint $table) {
+        Schema::create('student_batch_attendances', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->json('schedule_days')->comment('Day of the training session');
-            $table->time('start_time')->comment('Start time of the session');
-            $table->time('end_time')->comment('End time of the session');
+            $table->foreignId('training_batch_student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('training_batch_schedule_item_id')->constrained()->onDelete('cascade');
+            $table->date('attendance_date');
+            $table->time('check_in_time')->nullable();
+            $table->time('check_out_time')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('training_schedule_items');
+        Schema::dropIfExists('student_batch_attendances');
     }
 };
