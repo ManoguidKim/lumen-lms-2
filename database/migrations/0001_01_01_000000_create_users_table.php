@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-                   
+
             $table->boolean('is_trainer')->default(false);
             $table->boolean('is_course_admin')->default(false);
             $table->boolean('is_trainee')->default(false);
@@ -30,7 +30,6 @@ return new class extends Migration
             $table->string('user_type')->comment('Based on UserTypeEnum Internal, EmployerUser, Student');
             // Add column for employer company id
             $table->string('uuid')->unique();
-
 
             $table->rememberToken();
             $table->timestamps();
