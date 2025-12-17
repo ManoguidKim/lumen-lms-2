@@ -10,5 +10,13 @@
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
+<script>
+     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+     } else {
+          document.documentElement.classList.remove('dark')
+     }
+</script>
+
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance
