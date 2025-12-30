@@ -18,7 +18,7 @@ class CreateCenterRequest extends FormRequest
             'short_name' => ['nullable', 'string', 'max:255'],
 
             'code' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
                 'unique:centers,code',
@@ -61,6 +61,7 @@ class CreateCenterRequest extends FormRequest
             'short_name.max' => 'The short name may not exceed 255 characters.',
 
             'code.unique' => 'The center code has already been taken.',
+            'code.required' => 'The center code is required.',
             'code.string' => 'The center code must be a valid text.',
             'code.max' => 'The center code may not exceed 255 characters.',
 

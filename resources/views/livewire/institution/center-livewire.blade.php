@@ -63,7 +63,22 @@
                                 {{ $loop->iteration }}
                             </td>
                             <td scope="row" class="px-4 py-3 font-extrabold text-gray-600 whitespace-nowrap dark:text-white">
-
+                                {{ $center->code }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-white">
+                                {{ $center->name }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-white">
+                                {{ $center->address }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-white">
+                                {{ $center->contact_mobile }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-white">
+                                {{ $center->contact_landline }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-600 dark:text-white">
+                                {{ $center->email }}
                             </td>
                             <td class="px-4 py-3 text-gray-600 text-right whitespace-nowrap dark:text-white space-x-2">
                                 <button wire:click=""
