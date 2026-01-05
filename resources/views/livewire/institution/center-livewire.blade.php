@@ -81,14 +81,14 @@
                                 {{ $center->email }}
                             </td>
                             <td class="px-4 py-3 text-gray-600 text-right whitespace-nowrap dark:text-white space-x-2">
-                                <button wire:click=""
+                                <a href="{{ route('centers.show', ['uuid' => $center->uuid]) }}"
                                     class="inline-flex items-center text-green-600 hover:underline font-bold">
                                     <svg class="w-4 h-4 me-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    Edit
-                                </button>
+                                    View
+                                </a>
                             </td>
                         </tr>
                         @empty

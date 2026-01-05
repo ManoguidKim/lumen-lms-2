@@ -28,7 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/centers/store', [CenterController::class, 'store'])->name('centers.store');
     Route::get('/centers/{uuid}', [CenterController::class, 'show'])->name('centers.show');
     Route::get('/centers/{uuid}/edit', [CenterController::class, 'edit'])->name('centers.edit');
-    Route::put('/centers/{uuid}', [CenterController::class, 'update'])->name('centers.update');
+    Route::put('/centers/{uuid}/update', [CenterController::class, 'update'])->name('centers.update');
     Route::delete('/centers/{uuid}', [CenterController::class, 'destroy'])->name('centers.destroy');
 
 

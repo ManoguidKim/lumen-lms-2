@@ -13,6 +13,8 @@ class UpdateCenterRequest extends FormRequest
      */
     public function rules(): array
     {
+        $centerUuid = $this->route('uuid');
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'short_name' => ['nullable', 'string', 'max:255'],
@@ -21,7 +23,7 @@ class UpdateCenterRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
-                'unique:centers,code',
+                Rule::unique('centers', 'code')->ignore($centerUuid, 'uuid'),
             ],
 
             'type' => [

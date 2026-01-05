@@ -16,7 +16,6 @@ class Center extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'uuid',
         'name',
         'short_name',
         'code',

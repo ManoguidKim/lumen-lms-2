@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Modules\Institution\Http\Requests\CreateCenterRequest;
+use Modules\Institution\Http\Requests\UpdateCenterRequest;
 use Modules\Institution\Models\Center;
 
 class CenterController extends Controller
@@ -85,15 +86,16 @@ class CenterController extends Controller
     /**
      * Show the specified resource.
      */
-    public function show($id)
+    public function show($uuid)
     {
-        return view('institution::show');
+        $center = Center::where('uuid', $uuid)->first();
+        return view('institution.center.view', compact('center'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($uuid)
     {
         return view('institution::edit');
     }
@@ -101,10 +103,37 @@ class CenterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(UpdateCenterRequest $request, $uuid)
+    {
+        $center = Center::where('uuid', $uuid)->firstOrFail();
+        $validated = $request->validated();
+
+        if ($request->hasFile('logo_path')) {
+            if ($center->logo_path) {
+                Storage::disk('public')->delete($center->logo_path);
+            }
+
+            $validated['logo_path'] = $request->file('logo_path')->store('logos', 'public');
+        }
+
+        $center->update($validated);
+
+        return redirect()->route('centers.show', $center->uuid)
+            ->with('success', 'Center updated successfully!');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($uuid)
+    {
+        $center = Center::where('uuid', $uuid)->firstOrFail();
+        if ($center->logo_path) {
+            Storage::delete($center->logo_path);
+        }
+
+        $center->delete();
+        return redirect()->route('centers.index')
+            ->with('success', 'Center deleted successfully!');
+    }
 }
