@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('max_participants')->default(0);
             // $table->enum('status', ['open', 'full', 'ongoing', 'completed', 'cancelled'])->default('open');
             $table->string('status')->default('open')->comment("['open', 'full', 'ongoing', 'completed', 'cancelled']");
-            $table->string('instructor')->nullable(); // connect to trainer later
+            $table->foreignId('trainer_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();

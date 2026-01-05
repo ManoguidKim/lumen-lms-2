@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Learner;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('training_batch_id')->constrained()->onDelete('cascade');
-            $table->foreignId('student_id')->nullable()->constrained('learners')->onDelete('cascade');
+            $table->foreignId('learner_id')->nullable()->constrained('learners')->onDelete('cascade');
             $table->date('enrollment_date');
             $table->string('enrollment_status')->default('enrolled');
 

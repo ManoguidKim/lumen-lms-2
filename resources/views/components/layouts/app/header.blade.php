@@ -5,7 +5,7 @@
     @include('partials.head')
 </head>
 
-<body class="min-h-screen bg-white dark:bg-zinc-800">
+<!-- <body class="min-h-screen bg-white dark:bg-zinc-800">
     <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
@@ -38,7 +38,6 @@
             </flux:tooltip>
         </flux:navbar>
 
-        <!-- Desktop User Menu -->
         <flux:dropdown position="top" align="end">
             <flux:profile class="cursor-pointer" :initials="auth()->user()->initials()" />
 
@@ -81,7 +80,6 @@
         </flux:dropdown>
     </flux:header>
 
-    <!-- Mobile Menu -->
     <flux:sidebar stashable sticky
         class="lg:hidden border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
@@ -118,6 +116,6 @@
 
     @fluxScripts
     <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.0/dist/flowbite.min.js"></script>
-</body>
+</body> -->
 
 </html>

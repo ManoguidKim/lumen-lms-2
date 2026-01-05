@@ -40,32 +40,32 @@ return new class extends Migration
             // $table->string('name_extension', 10)->nullable();
 
             // These are personal data so these shoud be encrypted. Use text in migration
-            $table->string('address_number_street')->nullable();
-            $table->string('address_barangay')->nullable();
-            $table->string('address_city')->nullable();
-            $table->string('address_district')->nullable();
-            $table->string('address_province')->nullable();
-            $table->string('address_region')->nullable();
-            $table->string('address_zip_code', 10)->nullable();
+            $table->text('address_number_street')->nullable();
+            $table->text('address_barangay')->nullable();
+            $table->text('address_city')->nullable();
+            $table->text('address_district')->nullable();
+            $table->text('address_province')->nullable();
+            $table->text('address_region')->nullable();
+            $table->text('address_zip_code', 10)->nullable();
 
-            $table->string('mother_name')->nullable();
-            $table->string('father_name')->nullable();
+            $table->text('mother_name')->nullable();
+            $table->text('father_name')->nullable();
 
-            $table->string('sex')->comment('male', 'female')->nullable();
-            $table->string('civil_status')->comment('single', 'married', 'widow', 'separated')->nullable();
+            $table->text('sex')->comment('male', 'female')->nullable();
+            $table->text('civil_status')->comment('single', 'married', 'widow', 'separated')->nullable();
 
-            $table->string('contact_tel')->nullable();
-            $table->string('contact_mobile')->nullable();
-            $table->string('contact_email')->nullable();
-            $table->string('contact_fax')->nullable();
-            $table->string('contact_others')->nullable();
+            $table->text('contact_tel')->nullable();
+            $table->text('contact_mobile')->nullable();
+            $table->text('contact_email')->nullable();
+            $table->text('contact_fax')->nullable();
+            $table->text('contact_others')->nullable();
 
-            
-            $table->string('educational_attainment_others')->nullable();
 
-            
-            $table->date('birth_date')->nullable();
-            $table->string('birth_place')->nullable();
+            $table->text('educational_attainment_others')->nullable();
+
+
+            $table->text('birth_date')->nullable();
+            $table->text('birth_place')->nullable();
 
 
             // Age is a calculated value so it should not be entered into the database. 
@@ -91,7 +91,7 @@ return new class extends Migration
                 'ofw'
             )->nullable();
 
-           
+
 
             $table->string('registration_type')->comment('online', 'onsite')->default('onsite');
 
@@ -107,11 +107,6 @@ return new class extends Migration
             $table->json('trainings')->nullable();
             $table->json('licensure_examination')->nullable();
             $table->json('competency_assessment')->nullable();
-
-
-
-            $table->index('uli');
-            $table->index(['surname', 'firstname']);
         });
     }
 

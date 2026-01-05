@@ -25,9 +25,8 @@ return new class extends Migration
             $table->boolean('is_tesda_course')->default(false);
             $table->string('tr_number')->nullable()->unique()->comment('This refers to TESDA course training regulation number. Required only if this is a  tesda course');
 
-            $table->string('instructor')->nullable(); // connect to trainer later
-
-            $table->foreignId('course_administrator_id')->nullable()->constrained('users')->nullOnDelete();
+            // $table->foreignId('trainer_id')->nullable()->constrained('users')->nullOnDelete();
+            // $table->foreignId('course_administrator_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
