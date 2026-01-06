@@ -4,6 +4,7 @@ use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use Modules\CourseAdministration\Http\Controllers\TrainingCourseController;
 use Modules\Institution\Http\Controllers\CenterController;
 
 Route::get('/', function () {
@@ -32,7 +33,17 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/centers/{uuid}', [CenterController::class, 'destroy'])->name('centers.destroy');
 
 
+    // Course Administration Module Routes
+    Route::get('/training-courses', [TrainingCourseController::class, 'index'])->name('training_courses.index');
+    Route::get('/training-courses/create', [TrainingCourseController::class, 'create'])->name('training_courses.create');
+    Route::post('/training-courses/store', [TrainingCourseController::class, 'store'])->name('training_courses.store');
+    Route::get('/training-courses/{uuid}', [TrainingCourseController::class, 'show'])->name('training_courses.show');
+    Route::get('/training-courses/{uuid}/edit', [TrainingCourseController::class, 'edit'])->name('training_courses.edit');
+    Route::put('/training-courses/{uuid}/update', [TrainingCourseController::class, 'update'])->name('training_courses.update');
+    Route::delete('/training-courses/{uuid}/delete', [TrainingCourseController::class, 'destroy'])->name('training_courses.destroy');
 
+
+    // Perfomance Administration Module Routes
 
 
 
