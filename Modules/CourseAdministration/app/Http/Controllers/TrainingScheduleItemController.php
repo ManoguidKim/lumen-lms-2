@@ -7,9 +7,15 @@ use Illuminate\Http\Request;
 use Modules\CourseAdministration\Http\Requests\CreateTrainingScheduleItemRequest;
 use Modules\CourseAdministration\Http\Requests\UpdateTrainingScheduleItemRequest;
 use Modules\CourseAdministration\Models\TrainingScheduleItem;
+use Modules\CourseAdministration\Repositories\TrainingScheduleItemRepository;
 
 class TrainingScheduleItemController extends Controller
 {
+    private $trainingScheduleItemRepository;
+    public function __construct(TrainingScheduleItemRepository $trainingScheduleItemRepository)
+    {
+        $this->trainingScheduleItemRepository = $trainingScheduleItemRepository;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,8 +39,8 @@ class TrainingScheduleItemController extends Controller
     {
         // Validate the request data
         $validated = $request->validated();
-        // Logic to store the training schedule item
-        TrainingScheduleItem::create($validated);
+        // Logic to create a new training schedule item
+        $this->trainingScheduleItemRepository->create($validated);
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')
             ->with('success', 'Training Schedule Item created successfully.');
@@ -45,7 +51,7 @@ class TrainingScheduleItemController extends Controller
      */
     public function show($uuid)
     {
-        $trainingScheduleItem = TrainingScheduleItem::where('uuid', $uuid)->firstOrFail();
+        $trainingScheduleItem = $this->trainingScheduleItemRepository->findByUuid($uuid);
         return view('courseadministration.schedule_items.view', compact('trainingScheduleItem'));
     }
 
@@ -66,7 +72,7 @@ class TrainingScheduleItemController extends Controller
         $validated = $request->validated();
         // dd($validated);
         // Logic to update the training schedule item
-        $trainingScheduleItem = TrainingScheduleItem::where('uuid', $uuid)->firstOrFail();
+        $trainingScheduleItem = $this->trainingScheduleItemRepository->findByUuid($uuid);
         $trainingScheduleItem->update($validated);
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')
@@ -79,7 +85,7 @@ class TrainingScheduleItemController extends Controller
     public function destroy($uuid)
     {
         // Logic to delete the training schedule item
-        $trainingScheduleItem = TrainingScheduleItem::where('uuid', $uuid)->firstOrFail();
+        $trainingScheduleItem = $this->trainingScheduleItemRepository->findByUuid($uuid);
         $trainingScheduleItem->delete();
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')
