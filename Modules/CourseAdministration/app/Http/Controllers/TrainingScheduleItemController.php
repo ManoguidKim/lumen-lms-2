@@ -70,10 +70,8 @@ class TrainingScheduleItemController extends Controller
     {
         // Validate the request data
         $validated = $request->validated();
-        // dd($validated);
         // Logic to update the training schedule item
-        $trainingScheduleItem = $this->trainingScheduleItemRepository->findByUuid($uuid);
-        $trainingScheduleItem->update($validated);
+        $this->trainingScheduleItemRepository->updateByUuid($uuid, $validated);
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')
             ->with('success', 'Training Schedule Item updated successfully.');
@@ -85,8 +83,7 @@ class TrainingScheduleItemController extends Controller
     public function destroy($uuid)
     {
         // Logic to delete the training schedule item
-        $trainingScheduleItem = $this->trainingScheduleItemRepository->findByUuid($uuid);
-        $trainingScheduleItem->delete();
+        $this->trainingScheduleItemRepository->deleteByUuid($uuid);
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')
             ->with('success', 'Training Schedule Item deleted successfully.');
