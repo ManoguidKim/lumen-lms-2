@@ -86,10 +86,26 @@ class TrainingBatchScheduleItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, $uuid)
+    {
+        // Validate and get the validated data
+        $validatedData = $request->validated();
+        // Update the training batch schedule item
+        $this->trainingBatchScheduleItemRepository->updateByUuid($uuid, $validatedData);
+        // Redirect to the show page with success message
+        return redirect()->route('training_batch_schedule_items.show', $uuid)
+            ->with('success', 'Training Batch Schedule Item updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($uuid)
+    {
+        // Delete the training batch schedule item
+        $this->trainingBatchScheduleItemRepository->deleteByUuid($uuid);
+        // Redirect to the index page with success message
+        return redirect()->route('training_batch_schedule_items.index')
+            ->with('success', 'Training Batch Schedule Item deleted successfully.');
+    }
 }
