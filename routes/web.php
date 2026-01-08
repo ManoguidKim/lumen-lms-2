@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchController;
+use Modules\CourseAdministration\Http\Controllers\TrainingBatchScheduleItemController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchStudentController;
 use Modules\CourseAdministration\Http\Controllers\TrainingCourseController;
 use Modules\CourseAdministration\Http\Controllers\TrainingScheduleItemController;
@@ -72,7 +73,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/training-schedule-items/{id}', [TrainingScheduleItemController::class, 'show'])->name('training_schedule_items.show');
     Route::get('/training-schedule-items/{id}/edit', [TrainingScheduleItemController::class, 'edit'])->name('training_schedule_items.edit');
     Route::put('/training-schedule-items/{id}/update', [TrainingScheduleItemController::class, 'update'])->name('training_schedule_items.update');
-    Route::delete('/training-schedule-items/{id}/delete', [\Modules\CourseAdministration\Http\Controllers\TrainingScheduleItemController::class, 'destroy'])->name('training_schedule_items.destroy');
+    Route::delete('/training-schedule-items/{id}/delete', [TrainingScheduleItemController::class, 'destroy'])->name('training_schedule_items.destroy');
+
+    // --- Training Batch Schedule Items ----
+    Route::get('/training-batch-schedule-items', [TrainingBatchScheduleItemController::class, 'index'])->name('training_batch_schedule_items.index');
+    Route::get('/training-batch-schedule-items/create', [TrainingBatchScheduleItemController::class, 'create'])->name('training_batch_schedule_items.create');
+    Route::post('/training-batch-schedule-items/store', [TrainingBatchScheduleItemController::class, 'store'])->name('training_batch_schedule_items.store');
+    Route::get('/training-batch-schedule-items/{id}', [TrainingBatchScheduleItemController::class, 'show'])->name('training_batch_schedule_items.show');
+    Route::get('/training-batch-schedule-items/{id}/edit', [TrainingBatchScheduleItemController::class, 'edit'])->name('training_batch_schedule_items.edit');
+    Route::put('/training-batch-schedule-items/{id}/update', [TrainingBatchScheduleItemController::class, 'update'])->name('training_batch_schedule_items.update');
+    Route::delete('/training-batch-schedule-items/{id}/delete', [TrainingBatchScheduleItemController::class, 'destroy'])->name('training_batch_schedule_items.destroy');
 
 
     // Perfomance Administration Module Routes
