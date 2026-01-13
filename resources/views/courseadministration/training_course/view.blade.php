@@ -1,25 +1,22 @@
 <x-layouts.app.flowbite>
 
      <div class="max-w-full mx-auto">
-          <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
-               <div class="mb-6 flex justify-between items-start">
+          <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+               {{-- Header --}}
+               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 bg-blue-50 dark:bg-gray-600">
                     <div>
-                         <h1 class="text-2xl font-bold text-gray-900">Course Registration Update</h1>
-                         <p class="text-gray-600 mt-1">Fill in the details of the training center</p>
-                    </div>
-                    <div class="flex gap-2">
-                         <button type="submit" form="update-course-form" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                              Update
-                         </button>
-                         <button type="button" onclick="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                              Delete
-                         </button>
+                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                              Course Update
+                         </h3>
+                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Update the details of the training course
+                         </p>
                     </div>
                </div>
 
                {{-- Success Message --}}
                @if(session('success'))
-               <div class="mb-4 p-4 text-green-800 bg-green-50 rounded-lg" role="alert">
+               <div class="m-4 md:m-5 p-4 text-green-800 bg-green-50 rounded-lg" role="alert">
                     {{ session('success') }}
                </div>
                @endif
@@ -30,7 +27,7 @@
                     @method('PUT')
 
                     {{-- Basic Information --}}
-                    <div class="mb-6">
+                    <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {{-- Course Code --}}
@@ -42,7 +39,7 @@
                                         type="text"
                                         id="course_code"
                                         name="course_code"
-                                        value="{{ $course->course_code ?? old('course_code') }}"
+                                        value="{{ old('course_code', $course->course_code) }}"
                                         class="bg-gray-50 border @error('course_code') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Enter course code">
                                    @error('course_code')
@@ -59,9 +56,8 @@
                                         id="status"
                                         name="status"
                                         class="bg-gray-50 border @error('status') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                        <option value="{{ $course->status }}" {{ old('status', 'Active') == 'Active' ? 'selected' : '' }}>Active</option>
-                                        <option value="Active" {{ old('status', 'Active') == 'Active' ? 'selected' : '' }}>Active</option>
-                                        <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                        <option value="Active" {{ old('status', $course->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                        <option value="Inactive" {{ old('status', $course->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                    </select>
                                    @error('status')
                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -77,7 +73,7 @@
                                         type="text"
                                         id="course_name"
                                         name="course_name"
-                                        value="{{ $course->course_name ?? old('course_name') }}"
+                                        value="{{ old('course_name', $course->course_name) }}"
                                         class="bg-gray-50 border @error('course_name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Enter course name">
                                    @error('course_name')
@@ -95,7 +91,7 @@
                                         name="description"
                                         rows="4"
                                         class="bg-gray-50 border @error('description') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                        placeholder="Enter course description">{{ $course->description }}</textarea>
+                                        placeholder="Enter course description">{{ old('description', $course->description) }}</textarea>
                                    @error('description')
                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                    @enderror
@@ -110,7 +106,7 @@
                                         type="number"
                                         id="duration_hours"
                                         name="duration_hours"
-                                        value="{{ $course->duration_hours ?? old('duration_hours') }}"
+                                        value="{{ old('duration_hours', $course->duration_hours) }}"
                                         min="0"
                                         class="bg-gray-50 border @error('duration_hours') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Enter duration in hours">
@@ -122,7 +118,7 @@
                     </div>
 
                     {{-- TESDA Information --}}
-                    <div class="mb-6">
+                    <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">TESDA Information</h2>
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {{-- Is TESDA Course --}}
@@ -133,7 +129,7 @@
                                              name="is_tesda_course"
                                              type="checkbox"
                                              value="1"
-                                             {{ $course->is_tesda_course ? 'checked' : '' }}
+                                             {{ old('is_tesda_course', $course->is_tesda_course) ? 'checked' : '' }}
                                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                                         <label for="is_tesda_course" class="ml-2 text-sm font-medium text-gray-900">
                                              This is a TESDA accredited course
@@ -154,7 +150,7 @@
                                         type="text"
                                         id="tr_number"
                                         name="tr_number"
-                                        value="{{ $course->tr_number ?? old('tr_number') }}"
+                                        value="{{ old('tr_number', $course->tr_number) }}"
                                         class="bg-gray-50 border @error('tr_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                         placeholder="Enter TR number">
                                    <p class="mt-1 text-sm text-gray-500">Required only if this is a TESDA course</p>
@@ -166,11 +162,25 @@
                     </div>
 
                     {{-- Form Actions --}}
-                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-                         <a href="{{ route('training_courses.index') }}" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                         <button
+                              type="submit"
+                              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                              Update Course
+                         </button>
+                         <button
+                              type="button"
+                              onclick="confirmDelete()"
+                              class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 ml-3 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                              Delete Course
+                         </button>
+                         <a
+                              href="{{ route('training_courses.index') }}"
+                              class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                               Cancel
                          </a>
                     </div>
+
                </form>
 
                {{-- Hidden Delete Form --}}
@@ -201,7 +211,6 @@
                tesdaCheckbox.addEventListener('change', toggleTRNumber);
                toggleTRNumber();
           });
-          x
 
           function confirmDelete() {
                if (confirm('Are you sure you want to delete this training course? This action cannot be undone.')) {

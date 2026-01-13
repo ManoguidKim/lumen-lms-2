@@ -23,14 +23,13 @@ return new class extends Migration
 
             // These boolean columns represent role for internal users. 
 
-            $table->boolean('is_trainer')->default(false);
-            $table->boolean('is_course_admin')->default(false);
-            $table->boolean('is_trainee')->default(false);
-            $table->boolean('is_director')->default(false);
-            $table->boolean('is_super_admin')->default(false);
+            // $table->boolean('is_trainer')->default(false);
+            // $table->boolean('is_course_admin')->default(false);
+            // $table->boolean('is_trainee')->default(false);
+            // $table->boolean('is_director')->default(false);
+            // $table->boolean('is_super_admin')->default(false);
+            // $table->string('user_type')->comment('Based on UserTypeEnum Internal, EmployerUser, Student');
 
-
-            $table->string('user_type')->comment('Based on UserTypeEnum Internal, EmployerUser, Student');
             // Add column for employer company id
             $table->string('uuid')->unique();
 

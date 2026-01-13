@@ -13,7 +13,13 @@ class StudentBatchAttendance extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'training_batch_student_id',
+        'training_batch_schedule_item_id',
+        'attendance_date',
+        'check_in_time',
+        'check_out_time',
+    ];
 
     // protected static function newFactory(): StudentBatchAttendanceFactory
     // {

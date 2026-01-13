@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
@@ -11,6 +13,7 @@ use Modules\CourseAdministration\Http\Controllers\TrainingBatchStudentController
 use Modules\CourseAdministration\Http\Controllers\TrainingCourseController;
 use Modules\CourseAdministration\Http\Controllers\TrainingScheduleItemController;
 use Modules\Institution\Http\Controllers\CenterController;
+use Modules\PerformanceAdministration\Http\Controllers\StudentBatchAttendanceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -86,7 +89,21 @@ Route::middleware(['auth'])->group(function () {
 
 
     // Perfomance Administration Module Routes
-    // ---- To be added -----
+    Route::get('training_student_batch_attendances', [StudentBatchAttendanceController::class, 'index'])->name('training_student_batch_attendances.index');
+
+
+
+    // User Routes
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+
+    // Roles
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/roles/{id}', [RoleController::class, 'show'])->name('roles.show');
+    Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/roles/{id}/update', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
 
 

@@ -1,16 +1,23 @@
 <x-layouts.app.flowbite>
      <div class="max-w-full mx-auto">
-          <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
-               <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900">Create Training Session</h1>
-                    <p class="text-gray-600 mt-1">Define a new training session for a batch</p>
+          <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+               {{-- Header --}}
+               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 bg-blue-50 dark:bg-gray-600">
+                    <div>
+                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                              Create Training Session
+                         </h3>
+                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Define a new training session for a batch
+                         </p>
+                    </div>
                </div>
 
                <form action="{{ route('training_batch_schedule_items.store') }}" method="POST">
                     @csrf
 
                     {{-- Basic Information --}}
-                    <div class="mb-6">
+                    <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
 
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,7 +101,7 @@
                     </div>
 
                     {{-- Session Type --}}
-                    <div class="mb-6">
+                    <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Session Type</h2>
 
                          <div>
@@ -120,7 +127,7 @@
                     </div>
 
                     {{-- Notes --}}
-                    <div class="mb-6">
+                    <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Additional Notes</h2>
 
                          <div>
@@ -141,16 +148,16 @@
                     </div>
 
                     {{-- Actions --}}
-                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                          <button
                               type="submit"
-                              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                               Create Session
                          </button>
 
                          <a
                               href="{{ route('training_batch_schedule_items.index') }}"
-                              class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                              class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                               Cancel
                          </a>
                     </div>

@@ -4,15 +4,23 @@ namespace Modules\PerformanceAdministration\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\PerformanceAdministration\Http\Requests\CreateTrainingStudentBatchAttendanceRequest;
+use Modules\PerformanceAdministration\Http\Requests\UpdateTrainingStudentBatchAttendanceRequest;
+use Modules\PerformanceAdministration\Repositories\TrainingStudentBatchAttendanceRepository;
 
 class StudentBatchAttendanceController extends Controller
 {
+    private $trainingStudentBatchAttendanceRepository = null;
+    public function __construct(TrainingStudentBatchAttendanceRepository $trainingStudentBatchAttendanceRepository)
+    {
+        $this->trainingStudentBatchAttendanceRepository = $trainingStudentBatchAttendanceRepository;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('performanceadministration::index');
+        return view('performanceadministration.student_batch_attendance.index');
     }
 
     /**
@@ -26,14 +34,20 @@ class StudentBatchAttendanceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(CreateTrainingStudentBatchAttendanceRequest $request)
+    {
+        $validatedData = $request->validated();
+        $this->trainingStudentBatchAttendanceRepository->create($validatedData);
+        return redirect()->route('student_batch_attendances.index')->with('success', 'Student Batch Attendance created successfully.');
+    }
 
     /**
      * Show the specified resource.
      */
-    public function show($id)
+    public function show($uuid)
     {
-        return view('performanceadministration::show');
+        $studentBatchAttendance = $this->trainingStudentBatchAttendanceRepository->findByUuid($uuid);
+        return view('performanceadministration::show', compact('studentBatchAttendance'));
     }
 
     /**
@@ -47,10 +61,19 @@ class StudentBatchAttendanceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) {}
+    public function update(UpdateTrainingStudentBatchAttendanceRequest $request, $uuid)
+    {
+        $validatedData = $request->validated();
+        $this->trainingStudentBatchAttendanceRepository->updateByUuid($uuid, $validatedData);
+        return redirect()->route('student_batch_attendances.index')->with('success', 'Student Batch Attendance updated successfully.');
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($uuid)
+    {
+        $this->trainingStudentBatchAttendanceRepository->deleteByUuid($uuid);
+        return redirect()->route('student_batch_attendances.index')->with('success', 'Student Batch Attendance deleted successfully.');
+    }
 }

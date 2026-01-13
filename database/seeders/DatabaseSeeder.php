@@ -17,22 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-        $google2fa = app(Google2FA::class); 
-
-        User::factory()->withoutTwoFactor()->create([
-            'name' => config('app.admin_first_name'),
-            'last_name' => config('app.admin_last_name'),
-            'email' => config('app.admin_email'),
-            'user_type' => UserTypeEnum::INSTITUTIONAL_USER,
-            'is_super_admin' => true,                
-            'uuid' =>  Str::orderedUuid(),            
-            // 'two_factor_secret' => encrypt($google2fa->generateSecretKey()), // Encrypt the secret
-            // 'two_factor_recovery_codes' => encrypt(json_encode(collect(range(0, 8))->map(function () {
-            //     return str_replace('-', '', fake()->uuid());
-            // })->all())), 
-
-            'password' => Hash::make('password'), // Default password
-        ]);
+        $this->call(
+            [
+                PermissionSeeder::class,
+                RoleSeeder::class,
+                UserSeeder::class,
+            ]
+        );
     }
 }
