@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use Modules\CourseAdministration\Http\Controllers\LearnerTrainingApplicationController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchScheduleItemController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchStudentController;
@@ -96,6 +97,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // User Routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+
+    // Learner Training Application Routes
+    Route::get('learner-training-applications', [LearnerTrainingApplicationController::class, 'index'])->name('learner-training-applications.index');
+    Route::get('learner-training-applications/create', [LearnerTrainingApplicationController::class, 'create'])->name('learner-training-applications.create');
+    Route::get('learner-training-applications/{uuid}', [LearnerTrainingApplicationController::class, 'show'])->name('learner-training-applications.show');
 
     // Roles
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');

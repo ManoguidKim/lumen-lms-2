@@ -3,7 +3,13 @@
         Overview
     </h2>
 
+    @if (auth()->user()->hasRole('Student'))
+    <!-- Learner Dashboard Cards Livewire Component -->
+    <livewire:dashboard.learner.card-livewire />
+    @else
     <!-- Dashboard Cards Livewire Component -->
     <livewire:dashboard.card-dashboard-livewire />
+    @endif
+
     <!-- Dashboard Charts Livewire Component - ongoing -->
 </x-layouts.app.flowbite>
