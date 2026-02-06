@@ -26,6 +26,11 @@ class LearnerTrainingApplicationController extends Controller
         return view('learner.application.training_application');
     }
 
+    public function applicationsList()
+    {
+        return view('application.application-list');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -64,4 +69,10 @@ class LearnerTrainingApplicationController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id) {}
+
+    // Registration of new learner applications
+    public function registerApplication()
+    {
+        return view('application.register-learner-application');
+    }
 }

@@ -30,7 +30,7 @@ class TrainingBatchStudentLivewire extends Component
             )
             // Join tables
             ->join('training_batches', 'training_batch_students.training_batch_id', '=', 'training_batches.id')
-            ->join('users', 'training_batch_students.learner_id', '=', 'users.id')
+            ->join('users', 'training_batch_students.user_id', '=', 'users.id')
             // Apply search filter
             ->where(function ($query) {
                 $query->where('training_batches.batch_name', 'like', '%' . $this->search . '%')

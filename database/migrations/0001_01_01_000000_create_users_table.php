@@ -17,18 +17,9 @@ return new class extends Migration
             $table->text('middle_name')->nullable();
             $table->string('last_name');
             $table->text('extension')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // These boolean columns represent role for internal users. 
-
-            // $table->boolean('is_trainer')->default(false);
-            // $table->boolean('is_course_admin')->default(false);
-            // $table->boolean('is_trainee')->default(false);
-            // $table->boolean('is_director')->default(false);
-            // $table->boolean('is_super_admin')->default(false);
-            // $table->string('user_type')->comment('Based on UserTypeEnum Internal, EmployerUser, Student');
 
             // Add column for employer company id
             $table->string('uuid')->unique();

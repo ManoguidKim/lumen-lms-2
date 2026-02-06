@@ -38,4 +38,9 @@ class TrainingCourseRepository implements TrainingCourseInterface
         $item = $this->findByUuid($uuid);
         return $item->delete();
     }
+
+    public function findByCenterId($centerId)
+    {
+        return TrainingCourse::where('center_id', $centerId)->get();
+    }
 }

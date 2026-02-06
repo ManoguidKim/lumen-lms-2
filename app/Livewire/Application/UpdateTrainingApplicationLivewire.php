@@ -34,7 +34,7 @@ class UpdateTrainingApplicationLivewire extends Component
 
         $application = LearnerTrainingApplication::query()
             ->where('uuid', $uuid)
-            ->where('learner_id', auth()->user()->id)
+            ->where('user_id', auth()->user()->id)
             ->firstOrFail();
 
         // dd($application);

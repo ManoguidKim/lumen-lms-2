@@ -29,7 +29,10 @@ class TrainingBatchController extends Controller
         // Fetch related training courses for display
         $trainingCourses = TrainingCourse::all();
         // Fetch trainers for selection
-        $trainers = User::orderBy('name', 'asc')->get();
+        $trainers = User::role(['Trainer', 'Super Admin'])
+            ->orderBy('name', 'asc')
+            ->get();
+
         return view('courseadministration.training_batches.create', compact('trainingCourses', 'trainers'));
     }
 

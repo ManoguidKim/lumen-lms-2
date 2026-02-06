@@ -35,14 +35,11 @@ class CreateNewUser implements CreatesNewUsers
 
         // Edited..
         // Create the user and assign the 'Student' role
-        $learner = Learner::create();
-
         $user = User::create([
             'name' => $input['name'],
             'last_name' => $input['last_name'],
             'email' => $input['email'],
             'password' => $input['password'],
-            'learner_id' => $learner->id,
         ]);
         $user->assignRole('Student');
         return $user;

@@ -99,7 +99,7 @@ class CreateTrainingApplicationLivewire extends Component
             (new CreateLearnerTrainingApplicationRequest())->messages()
         );
 
-        $validated['learner_id'] = auth()->user()->id;
+        $validated['user_id'] = auth()->user()->id;
         $validated['application_date'] = now();
         $validated['application_number'] = 'APP-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
         $validated['status'] = 'pending';

@@ -59,7 +59,7 @@ class TrainingApplicationLivewire extends Component
     {
         $application = LearnerTrainingApplication::with(['center', 'trainingCourse', 'reviewer'])
             ->where('id', $applicationId)
-            ->where('learner_id', auth()->user()->id)
+            ->where('user_id', auth()->user()->id)
             ->firstOrFail();
 
         $this->isEditMode = true;
@@ -138,7 +138,7 @@ class TrainingApplicationLivewire extends Component
             (new CreateLearnerTrainingApplicationRequest())->messages()
         );
 
-        $validated['learner_id'] = auth()->user()->id;
+        $validated['user_id'] = auth()->user()->id;
         $validated['application_date'] = now();
         $validated['application_number'] = 'APP-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
         $validated['status'] = 'pending';
@@ -163,7 +163,7 @@ class TrainingApplicationLivewire extends Component
 
         try {
             $application = LearnerTrainingApplication::where('id', $this->application_id)
-                ->where('learner_id', auth()->user()->id)
+                ->where('user_id', auth()->user()->id)
                 ->where('status', 'pending')
                 ->firstOrFail();
 
@@ -186,7 +186,7 @@ class TrainingApplicationLivewire extends Component
             ->leftJoin('centers', 'centers.id', '=', 'learner_training_applications.center_id')
             ->leftJoin('training_courses', 'training_courses.id', '=', 'learner_training_applications.training_course_id')
             // Filter by learner
-            ->where('learner_id', auth()->user()->id)
+            ->where('learner_training_applications.user_id', auth()->user()->id)
             // Search filter
             ->when($this->search, function ($query) {
                 $query->where(function ($subQuery) {

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Learner;
 
-use App\Models\Learner;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -60,7 +60,7 @@ class LearnerLivewire extends Component
     public $licensure_examination = [];
     public $competency_assessment = [];
 
-    public function mount(Learner $learner)
+    public function mount(User $learner)
     {
         if ($learner) {
             $this->learner = $learner;
@@ -97,7 +97,7 @@ class LearnerLivewire extends Component
 
         $this->contact_mobile = $this->learner->contact_mobile;
         $this->contact_tel = $this->learner->contact_tel;
-        $this->contact_email = $this->learner->contact_email;
+        $this->contact_email = $this->learner->email;
         $this->contact_fax = $this->learner->contact_fax;
         $this->contact_others = $this->learner->contact_others;
 
@@ -398,7 +398,7 @@ class LearnerLivewire extends Component
             $this->learner->update($data);
             session()->flash('success', 'Learner information updated successfully!');
         } else {
-            Learner::create($data);
+            User::create($data);
             session()->flash('success', 'Learner registered successfully!');
             return redirect()->route('learners.index');
         }

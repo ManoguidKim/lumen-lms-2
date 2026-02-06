@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('uuid')->unique();
             $table->foreignId('training_batch_id')->constrained()->onDelete('cascade');
-            $table->foreignId('learner_id')->nullable()->constrained('learners')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->date('enrollment_date');
             $table->string('enrollment_status')->default('enrolled');
 

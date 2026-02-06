@@ -98,10 +98,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User Routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
 
+    // Register new applications
+    Route::get('learner-training-applications/register', [LearnerTrainingApplicationController::class, 'registerApplication'])->name('learner-training-applications.register.application');
+
     // Learner Training Application Routes
     Route::get('learner-training-applications', [LearnerTrainingApplicationController::class, 'index'])->name('learner-training-applications.index');
     Route::get('learner-training-applications/create', [LearnerTrainingApplicationController::class, 'create'])->name('learner-training-applications.create');
     Route::get('learner-training-applications/{uuid}', [LearnerTrainingApplicationController::class, 'show'])->name('learner-training-applications.show');
+
+    // Applicants View
+    Route::get('learner-applications-lists', [LearnerTrainingApplicationController::class, 'applicationsList'])->name('learner-applications-list.index');
 
     // Roles
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');

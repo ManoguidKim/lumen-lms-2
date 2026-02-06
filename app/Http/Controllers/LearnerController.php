@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Learner;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class LearnerController extends Controller
@@ -12,7 +13,7 @@ class LearnerController extends Controller
      */
     public function index()
     {
-        $learner = Learner::where('id', auth()->user()->learner_id)->first();
+        $learner = User::where('id', auth()->user()->id)->first();
         return view('learner.index', compact('learner'));
     }
 

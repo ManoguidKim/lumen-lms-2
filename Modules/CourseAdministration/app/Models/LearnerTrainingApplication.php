@@ -15,9 +15,10 @@ class LearnerTrainingApplication extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'learner_id',
+        'user_id',
         'center_id',
         'training_course_id',
+        'training_batch_id',
         'application_number',
         'application_date',
         'status',

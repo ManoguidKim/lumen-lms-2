@@ -38,4 +38,12 @@ class TrainingBatchRepository implements TrainingBatchInterface
         $item = $this->findByUuid($uuid);
         return $item->delete();
     }
+
+    public function getBatchByCourse($courseId)
+    {
+        return TrainingBatch::query()
+            ->where('status', 'open')
+            ->where('training_course_id', $courseId)
+            ->get();
+    }
 }
