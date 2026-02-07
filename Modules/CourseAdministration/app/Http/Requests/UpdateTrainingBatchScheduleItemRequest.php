@@ -25,8 +25,7 @@ class UpdateTrainingBatchScheduleItemRequest extends FormRequest
                 'exists:training_schedule_items,id'
             ],
             'session_title' => [
-                'sometimes',
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 'min:3'
@@ -37,8 +36,7 @@ class UpdateTrainingBatchScheduleItemRequest extends FormRequest
                 'max:5000'
             ],
             'session_type' => [
-                'sometimes',
-                'required',
+                'nullable',
                 'string',
             ],
             'notes' => [

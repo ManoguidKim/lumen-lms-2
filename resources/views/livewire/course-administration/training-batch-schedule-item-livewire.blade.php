@@ -59,9 +59,7 @@
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">#</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Training Batch Details</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Schedule Details</th>
-                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Session Title</th>
-                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
-                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Session Type</th>
+                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Additional Notes</th>
                         <th class="px-5 py-3"></th>
                     </tr>
                 </thead>
@@ -126,26 +124,32 @@
                             </div>
                         </td>
 
-                        <!-- Session Title -->
                         <td class="px-5 py-3.5">
+                            <div class="font-medium text-gray-900">
+                                {{ $trainingBatchScheduleItem->notes }}
+                            </div>
+                        </td>
+
+                        <!-- Session Title -->
+                        <!-- <td class="px-5 py-3.5">
                             <div class="font-medium text-gray-900">
                                 {{ $trainingBatchScheduleItem->session_title }}
                             </div>
-                        </td>
+                        </td> -->
 
                         <!-- Description -->
-                        <td class="px-5 py-3.5">
+                        <!-- <td class="px-5 py-3.5">
                             <div class="text-sm text-gray-600 max-w-xs">
                                 {{ Str::limit($trainingBatchScheduleItem->description, 100) }}
                             </div>
-                        </td>
+                        </td> -->
 
                         <!-- Session Type -->
-                        <td class="px-5 py-3.5">
+                        <!-- <td class="px-5 py-3.5">
                             <div class="font-medium text-gray-900">
                                 {{ ucfirst($trainingBatchScheduleItem->session_type) }}
                             </div>
-                        </td>
+                        </td> -->
 
                         <td class="px-5 py-3.5 text-right">
                             <a href="{{ route('training_batch_schedule_items.show', $trainingBatchScheduleItem->uuid) }}"

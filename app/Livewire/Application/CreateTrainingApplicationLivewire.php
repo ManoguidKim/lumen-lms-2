@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Application;
 
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Modules\CourseAdministration\Http\Requests\CreateLearnerTrainingApplicationRequest;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
@@ -31,6 +32,7 @@ class CreateTrainingApplicationLivewire extends Component
     public $availableCourses = [];
     public $selectedCenter = null;
     public $selectedCourse = null;
+    public $registration_type = 'online';
 
     public $search = '';
     public $pageCount = 10;
@@ -85,7 +87,7 @@ class CreateTrainingApplicationLivewire extends Component
     public function save()
     {
         // Check if user already has a pending application
-        $pendingApplication = LearnerTrainingApplication::where('learner_id', auth()->user()->id)
+        $pendingApplication = LearnerTrainingApplication::where('user_id', auth()->user()->id)
             ->where('status', 'pending')
             ->first();
 
@@ -101,8 +103,9 @@ class CreateTrainingApplicationLivewire extends Component
 
         $validated['user_id'] = auth()->user()->id;
         $validated['application_date'] = now();
-        $validated['application_number'] = 'APP-' . date('Ymd') . '-' . strtoupper(\Illuminate\Support\Str::random(6));
+        $validated['application_number'] = 'APP-' . date('Y') . '-' . Str::random(16);
         $validated['status'] = 'pending';
+        $validated['registration_type'] = 'online';
 
         $application = LearnerTrainingApplication::create($validated);
 

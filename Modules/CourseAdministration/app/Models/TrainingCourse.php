@@ -23,6 +23,7 @@ class TrainingCourse extends Model
         'status',
         'is_tesda_course',
         'tr_number',
+        'center_id'
     ];
 
     // protected static function newFactory(): TrainingCourseFactory

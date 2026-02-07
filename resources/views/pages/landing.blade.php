@@ -99,14 +99,16 @@
 
                     <!-- CTA Buttons -->
                     <div class="flex flex-wrap gap-4">
-                         <a href="#features"
+                         @if (Route::has('register'))
+                         <a href="{{ route('register') }}"
                               class="bg-yellow-400 text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-yellow-300 transition-colors shadow-lg">
-                              About
+                              Register
                          </a>
+                         @endif
 
                          <a href="{{ route('login') }}"
                               class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-700 transition-colors">
-                              Get Started
+                              Login
                          </a>
                     </div>
 

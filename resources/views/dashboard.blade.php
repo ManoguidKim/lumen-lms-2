@@ -1,7 +1,12 @@
 <x-layouts.app.flowbite>
-    <h2 class="mb-6 text-xl font-medium leading-none tracking-tight text-gray-600 md:text-xl dark:text-white">
-        Overview
-    </h2>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
+        <div>
+            <h1 class="text-xl font-semibold text-gray-800">Overview</h1>
+            <p class="text-sm text-gray-400 mt-0.5">
+                Overview of your activities, progress, and recent updates
+            </p>
+        </div>
+    </div>
 
     @if (auth()->user()->hasRole('Student'))
     <!-- Learner Dashboard Cards Livewire Component -->

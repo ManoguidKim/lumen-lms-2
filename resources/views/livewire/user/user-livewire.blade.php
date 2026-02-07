@@ -114,7 +114,7 @@
 
     <!-- Modal -->
     @if($isOpenModal)
-    <div id="static-modal" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+    <div id="static-modal" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
         <div class="relative p-4 w-full max-w-4xl max-h-full">
             <div class="relative bg-white rounded-lg shadow-sm">
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200 bg-indigo-50">
@@ -154,6 +154,17 @@
                             <option value="">Choose role</option>
                             @foreach ($rolelists as $role)
                             <option value="{{ $role->name }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('userRole') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Assign Center</label>
+                        <select wire:model="userCenter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400">
+                            <option value="">Choose center</option>
+                            @foreach ($centers as $center)
+                            <option value="{{ $center->id }}">{{ $center->name }}</option>
                             @endforeach
                         </select>
                         @error('userRole') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror

@@ -29,6 +29,9 @@ class CreateLearnerTrainingApplicationRequest extends FormRequest
                 'integer',
                 Rule::exists('users', 'id'),
             ],
+            'registration_type' => [
+                'nullable',
+            ],
             'reviewed_at' => [
                 'nullable',
                 'date',

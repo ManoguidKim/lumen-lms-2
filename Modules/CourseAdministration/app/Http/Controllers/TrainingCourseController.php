@@ -40,6 +40,7 @@ class TrainingCourseController extends Controller
             'status' => $request->input('status'),
             'is_tesda_course' => $request->input('is_tesda_course'),
             'tr_number' => $request->input('tr_number'),
+            'center_id' => 1
         ]);
 
         // Redirect to the training courses index with a success message

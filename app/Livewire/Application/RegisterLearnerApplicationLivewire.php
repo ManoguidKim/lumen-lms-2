@@ -11,6 +11,7 @@ use Livewire\WithFileUploads;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
 use Modules\CourseAdministration\Models\TrainingBatchStudent;
 use Modules\CourseAdministration\Repositories\TrainingBatchRepository;
+use Modules\CourseAdministration\Repositories\TrainingBatchStudentRepository;
 use Modules\CourseAdministration\Repositories\TrainingCourseRepository;
 
 class RegisterLearnerApplicationLivewire extends Component
@@ -76,8 +77,6 @@ class RegisterLearnerApplicationLivewire extends Component
 
     public function mount()
     {
-
-
         $this->initializeEmptyArrays();
     }
 
@@ -170,7 +169,7 @@ class RegisterLearnerApplicationLivewire extends Component
             'last_name' => $validated['lastName'],
             'extension' => $validated['suffix'],
             'email' => $validated['contactEmail'],
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make('password'),
             'uli' => $validated['uli'] ?? Str::random(16),
             'first_name' => $validated['firstName'],
             'middle_name' => $validated['middleName'] ?? null,
@@ -207,30 +206,32 @@ class RegisterLearnerApplicationLivewire extends Component
             'licensure_examination' => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
             'competency_assessment' => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
         ];
-
         $currentRegiterLearner = User::create($data);
+        $currentRegiterLearner->assignRole('Student');
 
         // Registration Data
-        $registerData = [
+        LearnerTrainingApplication::create([
             'user_id' => $currentRegiterLearner->id,
             'center_id' => 1,
             'training_course_id' => $this->courseId,
             'training_batch_id' => $this->batchId,
+            'status' => 'approved',
             'application_number' => 'APP-' . date('Y') . '-' . Str::random(16),
             'application_date' => date('Y-m-d'),
             'reviewed_by' => auth()->user()->id,
             'reviewed_at' => now(),
-        ];
-        LearnerTrainingApplication::create($registerData);
+            'registration_type' => 'onsite'
+        ]);
 
         // Register in traing batch student
-        $trainingBatchStudent = [
+        $trainingBatchStudentRepository = new TrainingBatchStudentRepository();
+        $trainingBatchStudentRepository->create([
             'training_batch_id' => $this->batchId,
             'user_id' => $currentRegiterLearner->id,
             'enrollment_date' => date('Y-m-d'),
             'enrollment_status' => 'enrolled',
-        ];
-        TrainingBatchStudent::create($trainingBatchStudent);
+        ]);
+        $trainingBatchStudentRepository = null;
 
         // Redirect to index
         return redirect()->route('learner-training-applications.index')

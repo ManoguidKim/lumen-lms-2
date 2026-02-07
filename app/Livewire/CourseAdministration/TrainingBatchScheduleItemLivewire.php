@@ -32,10 +32,12 @@ class TrainingBatchScheduleItemLivewire extends Component
             ->join('training_batches', 'training_batch_schedule_items.training_batch_id', '=', 'training_batches.id')
             ->join('training_schedule_items', 'training_batch_schedule_items.training_schedule_item_id', '=', 'training_schedule_items.id')
             // Search Filter
-            ->where('training_batch_schedule_items.session_title', 'like', '%' . $this->search . '%')
-            ->orWhere('training_batch_schedule_items.description', 'like', '%' . $this->search . '%')
+            // ->where('training_batch_schedule_items.session_title', 'like', '%' . $this->search . '%')
+            // ->orWhere('training_batch_schedule_items.description', 'like', '%' . $this->search . '%')
 
             ->paginate($this->perPage);
+
+        // dd($trainingBatchScheduleItems);
 
         return view('livewire.course-administration.training-batch-schedule-item-livewire', [
             'trainingBatchScheduleItems' => $trainingBatchScheduleItems,

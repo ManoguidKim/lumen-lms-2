@@ -4,6 +4,7 @@ namespace App\Livewire\User;
 
 use App\Models\User;
 use Livewire\Component;
+use Modules\Institution\Models\Center;
 use Spatie\Permission\Models\Role;
 
 class UserLivewire extends Component
@@ -25,12 +26,17 @@ class UserLivewire extends Component
 
     public function render()
     {
-        $users = User::paginate($this->perPage);
-        $roles = Role::all();
+        if (auth()->user()->role('Super Admin')) {
+            $users = User::role(['Super Admin', 'Trainer'])->paginate($this->perPage);
+            $roles = Role::all();
+        }
+
+        $centers = Center::all();
 
         return view('livewire.user.user-livewire', [
             'users' => $users,
-            'rolelists' => $roles
+            'rolelists' => $roles,
+            'centers' => $centers
         ]);
     }
 }

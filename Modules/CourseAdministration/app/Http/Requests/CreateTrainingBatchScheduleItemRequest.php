@@ -24,7 +24,7 @@ class CreateTrainingBatchScheduleItemRequest extends FormRequest
                 'exists:training_schedule_items,id'
             ],
             'session_title' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 'min:3'
@@ -35,7 +35,7 @@ class CreateTrainingBatchScheduleItemRequest extends FormRequest
                 'max:5000'
             ],
             'session_type' => [
-                'required',
+                'nullable',
                 'string'
             ],
             'notes' => [
