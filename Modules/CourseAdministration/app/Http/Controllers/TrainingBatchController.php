@@ -9,6 +9,7 @@ use Modules\CourseAdministration\Http\Requests\CreateTrainingBatchesRequest;
 use Modules\CourseAdministration\Http\Requests\UpdateTrainingBatchesRequest;
 use Modules\CourseAdministration\Models\TrainingBatch;
 use Modules\CourseAdministration\Models\TrainingCourse;
+use Modules\CourseAdministration\Models\TrainingScheduleItem;
 
 class TrainingBatchController extends Controller
 {
@@ -28,12 +29,14 @@ class TrainingBatchController extends Controller
     {
         // Fetch related training courses for display
         $trainingCourses = TrainingCourse::all();
+        // Fetch related training schedule items for display
+        $trainigScheduleItems = TrainingScheduleItem::all();
         // Fetch trainers for selection
-        $trainers = User::role(['Trainer', 'Super Admin'])
+        $trainers = User::role(['Trainer'])
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('courseadministration.training_batches.create', compact('trainingCourses', 'trainers'));
+        return view('courseadministration.training_batches.create', compact('trainingCourses', 'trainers', 'trainigScheduleItems'));
     }
 
     /**

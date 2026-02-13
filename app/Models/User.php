@@ -76,6 +76,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'trainings',
         'licensure_examination',
         'competency_assessment',
+
+        'center_id',
     ];
 
     /**

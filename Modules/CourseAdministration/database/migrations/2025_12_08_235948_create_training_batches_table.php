@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('max_participants')->default(0);
-            $table->foreignId('training_schedule_item_id')->constrained()->onDelete('set null');
+            $table->foreignId('training_schedule_item_id')->nullable()->constrained()->onDelete('set null');
             // $table->enum('status', ['open', 'full', 'ongoing', 'completed', 'cancelled'])->default('open');
             $table->string('status')->default('open')->comment("['open', 'full', 'ongoing', 'completed', 'cancelled']");
             $table->foreignId('trainer_id')->nullable()->constrained('users')->nullOnDelete();

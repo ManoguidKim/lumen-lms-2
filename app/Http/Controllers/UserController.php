@@ -36,7 +36,8 @@ class UserController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'center_id' => $request->center_id, // Set center_id to the same as the creator's center_id
         ]);
         $user->assignRole($request->role);
 
