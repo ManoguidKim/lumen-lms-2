@@ -18,13 +18,13 @@
                     class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg w-64 bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
             </div>
             <!-- Create Button -->
-            <button wire:click="toggleModal()"
+            <a href="{{ route('users-create.create') }}"
                 class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 rounded-lg shadow-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 New User
-            </button>
+            </a>
         </div>
     </div>
 
@@ -85,9 +85,9 @@
                             </div>
                         </td>
                         <td class="px-5 py-3.5 text-right">
-                            <button class="text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
+                            <a href="{{ route('users-edit.edit', $user->id) }}" class="text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
                                 Edit →
-                            </button>
+                            </a>
                         </td>
                     </tr>
                     @empty
@@ -109,78 +109,6 @@
     @if ($users->hasPages())
     <div class="mt-4">
         {{ $users->links() }}
-    </div>
-    @endif
-
-    <!-- Modal -->
-    @if($isOpenModal)
-    <div id="static-modal" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
-        <div class="relative p-4 w-full max-w-4xl max-h-full">
-            <div class="relative bg-white rounded-lg shadow-sm">
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t border-gray-200 bg-indigo-50">
-                    <h3 class="text-xl font-semibold text-gray-900">
-                        Create New User
-                    </h3>
-                    <button wire:click="toggleModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8">
-                        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="p-4 md:p-5 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input type="text" wire:model="userName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400" placeholder="Enter user name">
-                        <p class="mt-1 text-xs text-gray-500">Provide a clear user name. This will help identify the user in reports and management.</p>
-                        @error('userName') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="text" wire:model="userEmail" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400" placeholder="Enter user email">
-                        @error('userEmail') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" wire:model="userPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400" placeholder="Enter password">
-                        @error('userPassword') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">User Role</label>
-                        <select wire:model="userRole" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400">
-                            <option value="">Choose role</option>
-                            @foreach ($rolelists as $role)
-                            <option value="{{ $role->name }}">{{ $role->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('userRole') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Assign Center</label>
-                        <select wire:model="userCenter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 placeholder:text-gray-400">
-                            <option value="">Choose center</option>
-                            @foreach ($centers as $center)
-                            <option value="{{ $center->id }}">{{ $center->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('userRole') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                    </div>
-                </div>
-
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
-                    <button wire:click="saveUser" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                        Save
-                    </button>
-                    <button wire:click="toggleModal()" class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-indigo-700">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
     @endif
 </div>

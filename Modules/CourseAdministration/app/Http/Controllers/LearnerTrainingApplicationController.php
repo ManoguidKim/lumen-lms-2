@@ -75,4 +75,9 @@ class LearnerTrainingApplicationController extends Controller
     {
         return view('application.register-learner-application');
     }
+
+    public function updateRegisteredApplication($uuid)
+    {
+        return view('application.update-registered-learner-application', compact('uuid'));
+    }
 }

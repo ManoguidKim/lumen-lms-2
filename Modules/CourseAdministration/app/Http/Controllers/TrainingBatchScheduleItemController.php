@@ -44,6 +44,7 @@ class TrainingBatchScheduleItemController extends Controller
         // Get necessary data for the form
         $trainingBatches = $this->trainingBatchRepository->all();
         $trainingScheduleItems = $this->trainingScheduleItemRepository->all();
+        // dd($trainingScheduleItems);
         // Return the create view with data
         return view('courseadministration.schedule_batch_items.create', compact('trainingBatches', 'trainingScheduleItems'));
     }

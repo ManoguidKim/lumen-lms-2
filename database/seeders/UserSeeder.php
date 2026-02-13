@@ -25,16 +25,5 @@ class UserSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $userAdmin->assignRole('Super Admin');
-
-        // Student User
-        $userStudent = User::create([
-            'name' => 'Leonora',
-            'last_name' => 'Manoguid',
-            'email' => 'olexei20@gmail.com',
-            'uuid' =>  Str::orderedUuid(),
-            'password' => Hash::make('password'), // Default password
-            'email_verified_at' => now()
-        ]);
-        $userStudent->assignRole('Student');
     }
 }

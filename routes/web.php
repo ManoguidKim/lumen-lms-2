@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Modules\CourseAdministration\Http\Controllers\LearnerTrainingApplicationController;
+use Modules\CourseAdministration\Http\Controllers\TrainingActivityController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchScheduleItemController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchStudentController;
 use Modules\CourseAdministration\Http\Controllers\TrainingCourseController;
 use Modules\CourseAdministration\Http\Controllers\TrainingScheduleItemController;
 use Modules\Institution\Http\Controllers\CenterController;
+use Modules\Institution\Http\Controllers\TrainerCenterController;
 use Modules\PerformanceAdministration\Http\Controllers\StudentBatchAttendanceController;
 
 Route::get('/', function () {
@@ -36,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Institution Module Routes
+    // ---- Center ----
     Route::get('/centers', [CenterController::class, 'index'])->name('centers.index');
     Route::get('/centers/create', [CenterController::class, 'create'])->name('centers.create');
     Route::post('/centers/store', [CenterController::class, 'store'])->name('centers.store');
@@ -43,6 +46,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/centers/{uuid}/edit', [CenterController::class, 'edit'])->name('centers.edit');
     Route::put('/centers/{uuid}/update', [CenterController::class, 'update'])->name('centers.update');
     Route::delete('/centers/{uuid}', [CenterController::class, 'destroy'])->name('centers.destroy');
+
+    // ---- Center Trainers ----
+    Route::get('/centers-trainer', [TrainerCenterController::class, 'index'])->name('centers_trainer.index');
+    Route::get('/centers-trainer/create', [TrainerCenterController::class, 'create'])->name('centers_trainer.create');
+    Route::post('/centers-trainer/store', [TrainerCenterController::class, 'store'])->name('centers_trainer.store');
+    // Route::get('/centers/{uuid}', [CenterController::class, 'show'])->name('centers.show');
+    // Route::get('/centers/{uuid}/edit', [CenterController::class, 'edit'])->name('centers.edit');
+    // Route::put('/centers/{uuid}/update', [CenterController::class, 'update'])->name('centers.update');
+    // Route::delete('/centers/{uuid}', [CenterController::class, 'destroy'])->name('centers.destroy');
 
 
     // Course Administration Module Routes
@@ -88,18 +100,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/training-batch-schedule-items/{id}/edit', [TrainingBatchScheduleItemController::class, 'edit'])->name('training_batch_schedule_items.edit');
     Route::put('/training-batch-schedule-items/{id}/update', [TrainingBatchScheduleItemController::class, 'update'])->name('training_batch_schedule_items.update');
     Route::delete('/training-batch-schedule-items/{id}/delete', [TrainingBatchScheduleItemController::class, 'destroy'])->name('training_batch_schedule_items.destroy');
+    // --- Training Student Activity ----
+    Route::get('/training-student-activities', [TrainingActivityController::class, 'index'])->name('training_student_activities.index');
 
 
     // Perfomance Administration Module Routes
     Route::get('training_student_batch_attendances', [StudentBatchAttendanceController::class, 'index'])->name('training_student_batch_attendances.index');
 
 
-
     // User Routes
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users-create.create');
+    Route::post('/users/store', [UserController::class, 'store'])->name('users-store.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users-edit.edit');
+    Route::put('/users/{id}/update', [UserController::class, 'update'])->name('users-update.update');
+
 
     // Register new applications
     Route::get('learner-training-applications/register', [LearnerTrainingApplicationController::class, 'registerApplication'])->name('learner-training-applications.register.application');
+    Route::get('learner-training-applications/register/update/{uuid}', [LearnerTrainingApplicationController::class, 'updateRegisteredApplication'])->name('learner-training-applications.update.registered.application');
 
     // Learner Training Application Routes
     Route::get('learner-training-applications', [LearnerTrainingApplicationController::class, 'index'])->name('learner-training-applications.index');

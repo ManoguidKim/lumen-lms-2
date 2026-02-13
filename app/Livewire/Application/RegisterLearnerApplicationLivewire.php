@@ -234,7 +234,7 @@ class RegisterLearnerApplicationLivewire extends Component
         $trainingBatchStudentRepository = null;
 
         // Redirect to index
-        return redirect()->route('learner-training-applications.index')
+        return redirect()->route('learner-applications-list.index')
             ->with('success', 'Learner application registered successfully');
     }
 
@@ -247,7 +247,6 @@ class RegisterLearnerApplicationLivewire extends Component
             $trainingBatchRepository = new TrainingBatchRepository();
             $this->batches = $trainingBatchRepository->getBatchByCourse($this->courseId);
         }
-
 
         return view('livewire.application.register-learner-application-livewire');
     }

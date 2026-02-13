@@ -66,6 +66,8 @@ return new class extends Migration
             $table->json('trainings')->nullable();
             $table->json('licensure_examination')->nullable();
             $table->json('competency_assessment')->nullable();
+
+            $table->string('full_name_searchable')->nullable()->index();
         });
     }
 

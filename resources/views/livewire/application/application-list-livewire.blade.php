@@ -217,9 +217,9 @@
                                 </button>
                                 <span class="text-gray-300">|</span>
                                 @endif
-                                <button class="text-gray-500 hover:text-gray-700 font-medium text-sm transition">
+                                <a href="{{ route('learner-training-applications.update.registered.application', $applicant->uuid) }}" class="text-gray-500 hover:text-gray-700 font-medium text-sm transition">
                                     View →
-                                </button>
+                                </a>
                             </div>
                         </td>
                     </tr>

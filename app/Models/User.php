@@ -123,4 +123,15 @@ class User extends Authenticatable implements MustVerifyEmail
             ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    protected static function booted()
+    {
+        static::saving(function ($user) {
+            $user->full_name_searchable = trim(
+                ($user->name ?? '') . ' ' .
+                    ($user->middle_name ?? '') . ' ' .
+                    ($user->last_name ?? '')
+            );
+        });
+    }
 }

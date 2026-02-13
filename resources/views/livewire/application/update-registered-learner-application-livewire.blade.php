@@ -5,10 +5,10 @@
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 bg-blue-50 dark:bg-gray-600">
                 <div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        New Learner Registration
+                        Update Learner Registration
                     </h3>
                     <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                        Complete all required fields to register a new learner
+                        Update learner information, training course assignment, and batch enrollment
                     </p>
                 </div>
             </div>
@@ -495,7 +495,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                         </svg>
-                        Register new applicants
+                        Update learner application
                     </button>
 
                     <a

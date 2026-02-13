@@ -13,7 +13,10 @@ class TrainerCenter extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'center_id',
+        'trainer_id'
+    ];
 
     // protected static function newFactory(): TrainerCenterFactory
     // {

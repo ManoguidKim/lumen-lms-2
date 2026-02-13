@@ -1,18 +1,18 @@
 <?php
 
-namespace Modules\Institution\Http\Controllers;
+namespace Modules\CourseAdministration\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TrainerCenterController extends Controller
+class TrainingActivityController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('institution.center_trainer.index');
+        return view('activity.calendar.index');
     }
 
     /**
@@ -20,7 +20,7 @@ class TrainerCenterController extends Controller
      */
     public function create()
     {
-        return view('institution::create');
+        return view('courseadministration::create');
     }
 
     /**
@@ -33,7 +33,7 @@ class TrainerCenterController extends Controller
      */
     public function show($id)
     {
-        return view('institution::show');
+        return view('courseadministration::show');
     }
 
     /**
@@ -41,7 +41,7 @@ class TrainerCenterController extends Controller
      */
     public function edit($id)
     {
-        return view('institution::edit');
+        return view('courseadministration::edit');
     }
 
     /**

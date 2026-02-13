@@ -63,7 +63,11 @@
                                         <option value="">None (Custom session)</option>
                                         @foreach($trainingScheduleItems as $item)
                                         <option value="{{ $item->id }}" {{ old('training_schedule_item_id', $trainingBatchScheduleItem->training_schedule_item_id) == $item->id ? 'selected' : '' }}>
-                                             {{ $item->name }} ({{ date('g:i A', strtotime($item->start_time)) }} - {{ date('g:i A', strtotime($item->end_time)) }})
+                                             {{ $item->name }}
+                                             @if(!empty($item->schedule_days) && is_array($item->schedule_days))
+                                             ({{ implode(', ', $item->schedule_days) }})
+                                             @endif
+                                             - ({{ date('g:i A', strtotime($item->start_time)) }} - {{ date('g:i A', strtotime($item->end_time)) }})
                                         </option>
                                         @endforeach
                                    </select>
