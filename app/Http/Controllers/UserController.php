@@ -41,12 +41,6 @@ class UserController extends Controller
         ]);
         $user->assignRole($request->role);
 
-        // Add to Trainer Center table
-        TrainerCenter::create([
-            'center_id' => $request->center_id,
-            'trainer_id' => $user->id
-        ]);
-
         return redirect()
             ->route('users.index')
             ->with('success', 'User registered successfully!');

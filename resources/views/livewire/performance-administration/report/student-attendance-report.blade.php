@@ -26,9 +26,9 @@
             <div class="flex items-center gap-1.5">
                 <span class="w-3 h-3 rounded-sm bg-red-400 inline-block"></span> Absent
             </div>
-            <div class="flex items-center gap-1.5">
+            <!-- <div class="flex items-center gap-1.5">
                 <span class="w-3 h-3 rounded-sm bg-yellow-400 inline-block"></span> Partial
-            </div>
+            </div> -->
             <div class="flex items-center gap-1.5">
                 <span class="w-3 h-3 rounded-sm bg-gray-200 inline-block"></span> No Record
             </div>

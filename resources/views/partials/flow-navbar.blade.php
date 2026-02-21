@@ -200,6 +200,7 @@
                         </a>
                     </li>
 
+                    @if (auth()->user()->hasRole('Super Admin'))
                     <li>
                         <a href="{{ route('learner-applications-list.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
@@ -211,8 +212,22 @@
                         </a>
                     </li>
 
-                    @if (auth()->user()->hasRole('Trainer'))
+                    <li>
+                        <a href="{{ route('learner-training-applications.approve.application.no.batch') }}"
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
+                            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 0115 0" />
+                            </svg>
+                            <span class="ml-3 text-sm">No Batch Application</span>
+                        </a>
+                    </li>
+                    @endif
+
                     <!-- Activity -->
+                    @if (auth()->user()->hasRole('Trainer') || auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Center Admin'))
                     <li>
                         <a href="{{ route('training_student_activities.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
@@ -223,7 +238,6 @@
                             <span class="ml-3 text-sm">Calendar Activity</span>
                         </a>
                     </li>
-                    <!-- End Activity -->
                     @endif
 
                     @if (auth()->user()->hasRole('Super Admin'))
@@ -240,8 +254,9 @@
                         </a>
                     </li>
 
+
                     <!-- Trainer Center -->
-                    <li>
+                    <!-- <li>
                         <a href="{{ route('centers_trainer.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
                             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -250,8 +265,8 @@
                             </svg>
                             <span class="ml-3 text-sm">Center Trainer</span>
                         </a>
-                    </li>
-                    @endif
+                    </li> -->
+
                     <!-- End Trainer Center -->
 
                     <!-- Learner -->
@@ -267,6 +282,7 @@
                     </li> -->
                     <!-- End Learner -->
 
+
                     <li>
                         <a href="{{ route('training_courses.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
@@ -277,9 +293,10 @@
                             <span class="ml-3 text-sm">Course</span>
                         </a>
                     </li>
+                    @endif
 
                     <!-- Training Requirement -->
-                    <li>
+                    <!-- <li>
                         <a href="#"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
                             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -288,10 +305,11 @@
                             </svg>
                             <del><span class="ml-3 text-sm">Training Requirement (Ongoing)</span></del>
                         </a>
-                    </li>
+                    </li> -->
                     <!-- End Training Requirement -->
 
                     <!-- Batches -->
+                    @if (auth()->user()->hasRole('Center Admin'))
                     <li>
                         <a href="{{ route('training_batches.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
@@ -302,6 +320,7 @@
                             <span class="ml-3 text-sm">Batches</span>
                         </a>
                     </li>
+                    @endif
                     <!-- End Batche -->
 
                     <!-- Student Batches -->
@@ -317,6 +336,8 @@
                     </li> -->
                     <!-- End Student Batches -->
 
+                    @if (auth()->user()->hasRole('Center Admin'))
+
                     <!-- Schedule Items -->
                     <li>
                         <a href="{{ route('training_schedule_items.index') }}"
@@ -328,6 +349,7 @@
                             <span class="ml-3 text-sm">Schedule</span>
                         </a>
                     </li>
+                    @endif
                     <!-- End Schedule Items -->
 
                     <!-- Batch Schedule -->
@@ -343,6 +365,7 @@
                     </li> -->
                     <!-- End Batch Schedule  -->
 
+                    @if (auth()->user()->hasRole('Trainer'))
                     <li>
                         <a href="{{ route('training_student_batch_attendances.index') }}"
                             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-indigo-200 dark:hover:bg-gray-700 transform hover:scale-[1.01] transition-all">
@@ -350,9 +373,10 @@
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                             </svg>
-                            <span class="ml-3 text-sm">Student Batch Attendance (Ongoing)</span>
+                            <span class="ml-3 text-sm">Trainer Batches (Ongoing)</span>
                         </a>
                     </li>
+                    @endif
 
                     @if (auth()->user()->hasRole('Super Admin'))
                     <li>

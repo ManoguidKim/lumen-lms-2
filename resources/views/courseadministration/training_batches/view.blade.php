@@ -158,6 +158,45 @@
                          </div>
                     </div>
 
+                    {{-- Schedule Information --}}
+                    <div class="p-4 md:p-5 space-y-4">
+                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Batch Schedule Information</h2>
+                         <div>
+                              <label for="trainer_id" class="block mb-2 text-sm font-medium text-gray-900">
+                                   Assigned Schedule
+                              </label>
+                              <select
+                                   id="training_schedule_item_id"
+                                   name="training_schedule_item_id"
+                                   class="bg-gray-50 border @error('training_schedule_item_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                   <option value="{{ $currentTrainingScheduleItems->id ?? '' }}">
+                                        {{ $currentTrainingScheduleItems->name ?? 'Select schedule' }}
+                                        @if(isset($currentTrainingScheduleItems))
+                                        @if($currentTrainingScheduleItems->schedule_days)
+                                        - {{ is_array($currentTrainingScheduleItems->schedule_days) ? implode(', ', $currentTrainingScheduleItems->schedule_days) : $currentTrainingScheduleItems->schedule_days }}
+                                        @endif
+                                        @if($currentTrainingScheduleItems->start_time && $currentTrainingScheduleItems->end_time)
+                                        ({{ \Carbon\Carbon::parse($currentTrainingScheduleItems->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($currentTrainingScheduleItems->end_time)->format('g:i A') }})
+                                        @endif
+                                        @endif
+                                   </option>
+                                   @foreach($trainigScheduleItems as $schedule)
+                                   <option value="{{ $schedule->id }}" {{ old('training_schedule_item_id') == $schedule->id ? 'selected' : '' }}>
+                                        {{ $schedule->name }}
+                                        @if($schedule->schedule_days)
+                                        - {{ is_array($schedule->schedule_days) ? implode(', ', $schedule->schedule_days) : $schedule->schedule_days }}
+                                        @endif
+                                        @if($schedule->start_time && $schedule->end_time)
+                                        ({{ \Carbon\Carbon::parse($schedule->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($schedule->end_time)->format('g:i A') }})
+                                        @endif
+                                   </option>
+                                   @endforeach
+                              </select>
+                              @error('training_schedule_item_id')
+                              <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                              @enderror
+                         </div>
+                    </div>
                     {{-- Trainer Information --}}
                     <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Trainer Information</h2>

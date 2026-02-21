@@ -40,6 +40,7 @@ class TrainingScheduleItemController extends Controller
         // Validate the request data
         $validated = $request->validated();
         // Logic to create a new training schedule item
+        $validated['center_id'] = auth()->user()->center_id; // Assign center_id based on the authenticated user's center
         $this->trainingScheduleItemRepository->create($validated);
         // Redirect or return response
         return redirect()->route('training_schedule_items.index')

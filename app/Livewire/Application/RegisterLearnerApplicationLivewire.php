@@ -4,19 +4,28 @@ namespace App\Livewire\Application;
 
 use App\Http\Requests\CreateRegisterLearnerApplicationRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
+use Modules\CourseAdministration\Models\TrainingBatch;
 use Modules\CourseAdministration\Models\TrainingBatchStudent;
+use Modules\CourseAdministration\Models\TrainingCenterCourse;
+use Modules\CourseAdministration\Models\TrainingCourse;
 use Modules\CourseAdministration\Repositories\TrainingBatchRepository;
 use Modules\CourseAdministration\Repositories\TrainingBatchStudentRepository;
 use Modules\CourseAdministration\Repositories\TrainingCourseRepository;
+use Modules\Institution\Models\Center;
+use Modules\Institution\Repositories\TrainingCenterRepository;
 
 class RegisterLearnerApplicationLivewire extends Component
 {
     use WithFileUploads;
+
+    public $centerId;
+    public $centers = [];
 
     public $courseId;
     public $courses = [];
@@ -212,10 +221,10 @@ class RegisterLearnerApplicationLivewire extends Component
         // Registration Data
         LearnerTrainingApplication::create([
             'user_id' => $currentRegiterLearner->id,
-            'center_id' => 1,
+            'center_id' => $this->centerId,
             'training_course_id' => $this->courseId,
-            'training_batch_id' => $this->batchId,
-            'status' => 'approved',
+            'training_batch_id' => $this->batchId ?? null,
+            'status' => $this->batchId ? 'approved' : 'pending',
             'application_number' => 'APP-' . date('Y') . '-' . Str::random(16),
             'application_date' => date('Y-m-d'),
             'reviewed_by' => auth()->user()->id,
@@ -223,29 +232,90 @@ class RegisterLearnerApplicationLivewire extends Component
             'registration_type' => 'onsite'
         ]);
 
-        // Register in traing batch student
-        $trainingBatchStudentRepository = new TrainingBatchStudentRepository();
-        $trainingBatchStudentRepository->create([
-            'training_batch_id' => $this->batchId,
-            'user_id' => $currentRegiterLearner->id,
-            'enrollment_date' => date('Y-m-d'),
-            'enrollment_status' => 'enrolled',
-        ]);
-        $trainingBatchStudentRepository = null;
+        if (isset($this->batchId)) {
+            // Register in traing batch student
+            $trainingBatchStudentRepository = new TrainingBatchStudentRepository();
+            $trainingBatchStudentRepository->create([
+                'training_batch_id' => $this->batchId,
+                'user_id' => $currentRegiterLearner->id,
+                'enrollment_date' => date('Y-m-d'),
+                'enrollment_status' => 'enrolled',
+            ]);
+        }
+
+        // update batch status if max participants reached
+        $this->updateBatchStatusIfFull($this->batchId);
 
         // Redirect to index
-        return redirect()->route('learner-applications-list.index')
-            ->with('success', 'Learner application registered successfully');
+        if (isset($this->batchId)) {
+            return redirect()->route('learner-applications-list.index')
+                ->with('success', 'Learner application registered successfully');
+        } else {
+            return redirect()->route('learner-applications-list.index')
+                ->with('success', 'Learner application submitted successfully and waiting for training batch assignment');
+        }
+    }
+
+    private function updateBatchStatusIfFull($batchId)
+    {
+        $batch = TrainingBatch::query()
+            ->select(
+                'training_batches.id',
+                'training_batches.max_participants',
+                DB::raw('COUNT(training_batch_students.id) as registered_students_count')
+            )
+            ->join('training_courses', 'training_batches.training_course_id', '=', 'training_courses.id')
+            ->leftJoin('training_batch_students', 'training_batches.id', '=', 'training_batch_students.training_batch_id')
+            ->where('training_batches.id', $batchId)
+            ->groupBy(
+                'training_batches.id',
+                'training_batches.max_participants'
+            )
+            ->first();
+
+        if ($batch) {
+            if ($batch->registered_students_count >= $batch->max_participants && $batch->status !== 'full') {
+                $batch->update(['status' => 'full']);
+            }
+        }
+    }
+
+    public function updatedCourseId()
+    {
+        $this->centerId = null;
+        $this->batchId = null;
+        $this->batches = [];
+        $this->centers = [];
+    }
+
+    public function updatedCenterId()
+    {
+        $this->batchId = null;
+        $this->batches = [];
     }
 
     public function render()
     {
-        $trainingCourseRepository = new TrainingCourseRepository();
-        $this->courses = $trainingCourseRepository->findByCenterId(1);
+        // Always load courses
+        $this->courses = TrainingCourse::all();
 
+        // Load centers that offer the selected course
         if ($this->courseId) {
-            $trainingBatchRepository = new TrainingBatchRepository();
-            $this->batches = $trainingBatchRepository->getBatchByCourse($this->courseId);
+            $this->centers = Center::query()
+                ->join('training_center_courses', 'centers.id', '=', 'training_center_courses.center_id')
+                ->where('training_center_courses.training_course_id', $this->courseId)
+                ->where('training_center_courses.is_active', true)
+                ->select('centers.*')
+                ->get();
+        }
+
+        // Load batches for the selected course + center
+        if ($this->courseId && $this->centerId) {
+            $this->batches = TrainingBatch::query()
+                ->where('training_course_id', $this->courseId)
+                ->where('center_id', $this->centerId)
+                ->whereIn('status', ['open', 'ongoing'])
+                ->get();
         }
 
         return view('livewire.application.register-learner-application-livewire');

@@ -22,7 +22,17 @@ class CreateStudentAttendance extends Component
         $this->trainingScheduleItemId = $this->trainingBatch->training_schedule_item_id;
 
         $this->trainingBatchStudent = TrainingBatchStudent::query()
-            ->join('users', 'training_batch_students.user_id', '=', 'users.id')
+            ->select([
+                "training_batch_students.id",
+                "training_batch_students.uuid",
+                "training_batch_students.user_id",
+                "users.name",
+                "users.middle_name",
+                "users.last_name",
+                "users.uli",
+                "users.full_name_searchable",
+            ])
+            ->join('users', 'users.id', '=', 'training_batch_students.user_id')
             ->where('training_batch_id', $this->trainingBatch->id)
             ->get();
 
@@ -35,6 +45,8 @@ class CreateStudentAttendance extends Component
                 'check_out_time'            => null,
             ];
         }
+
+        // dd($this->trainingBatchStudent);
     }
 
     public function save()
@@ -72,7 +84,7 @@ class CreateStudentAttendance extends Component
             }
         }
 
-        session()->flash('success', 'Attendances saved successfully.');
+        return redirect()->route('training_student_batch_attendances.index')->with('success', 'Attendance records saved successfully.');
     }
 
     public function render()

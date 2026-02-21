@@ -51,6 +51,8 @@ class CreateTrainingCourseRequest extends FormRequest
                 'max:255',
                 'unique:training_courses,tr_number',
             ],
+            'course_center_id'   => 'required|array',
+            'course_center_id.*' => 'exists:centers,id',
         ];
     }
 
@@ -94,6 +96,11 @@ class CreateTrainingCourseRequest extends FormRequest
             'tr_number.string' => 'TR number must be a valid string.',
             'tr_number.max' => 'TR number may not exceed 255 characters.',
             'tr_number.unique' => 'This TR number is already assigned to another course.',
+
+            // Course centers
+            'course_center_id.required' => 'Please select at least one center for this course.',
+            'course_center_id.array' => 'Invalid format for course centers.',
+            'course_center_id.*.exists' => 'One or more selected centers do not exist.',
         ];
     }
 

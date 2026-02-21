@@ -79,7 +79,7 @@ class StudentAttendanceReport extends Component
             ];
         }
 
-        // dd($this->attendanceMap);
+        // dd($this->attendanceMap); 
     }
 
     public function render()

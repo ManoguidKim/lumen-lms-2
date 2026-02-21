@@ -66,6 +66,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/training-courses/{uuid}/edit', [TrainingCourseController::class, 'edit'])->name('training_courses.edit');
     Route::put('/training-courses/{uuid}/update', [TrainingCourseController::class, 'update'])->name('training_courses.update');
     Route::delete('/training-courses/{uuid}/delete', [TrainingCourseController::class, 'destroy'])->name('training_courses.destroy');
+
+    Route::get('/training-courses/{uuid}/select-center', [TrainingCourseController::class, 'selectCenter'])->name('training_courses.select_center');
+
+
+
+
+
     // ---- Training Batches ----
     Route::get('/training-batches', [TrainingBatchController::class, 'index'])->name('training_batches.index');
     Route::get('/training-batches/create', [TrainingBatchController::class, 'create'])->name('training_batches.create');
@@ -123,9 +130,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('learner-training-applications/register/update/{uuid}', [LearnerTrainingApplicationController::class, 'updateRegisteredApplication'])->name('learner-training-applications.update.registered.application');
 
     // Learner Training Application Routes
+    Route::get('learner-training-applications/approve-application-no-batch', [LearnerTrainingApplicationController::class, 'registerApplicationNoBatch'])->name('learner-training-applications.approve.application.no.batch');
+
     Route::get('learner-training-applications', [LearnerTrainingApplicationController::class, 'index'])->name('learner-training-applications.index');
     Route::get('learner-training-applications/create', [LearnerTrainingApplicationController::class, 'create'])->name('learner-training-applications.create');
     Route::get('learner-training-applications/{uuid}', [LearnerTrainingApplicationController::class, 'show'])->name('learner-training-applications.show');
+
 
     // Applicants View
     Route::get('learner-applications-lists', [LearnerTrainingApplicationController::class, 'applicationsList'])->name('learner-applications-list.index');

@@ -109,11 +109,12 @@ class ApplicationListLivewire extends Component
     {
         $applicants = User::query()
 
-            ->select('centers.name as center_name', 'training_courses.course_name', 'training_courses.course_code', 'learner_training_applications.*', 'users.name', 'users.middle_name', 'users.last_name')
+            ->select('centers.name as center_name', 'training_courses.course_name', 'training_courses.course_code', 'learner_training_applications.*', 'users.full_name_searchable', 'training_batches.batch_name', 'training_batches.batch_code')
             // Joins
             ->leftjoin('learner_training_applications', 'users.id', '=', 'learner_training_applications.user_id')
             ->leftJoin('centers', 'centers.id', '=', 'learner_training_applications.center_id')
             ->leftJoin('training_courses', 'training_courses.id', '=', 'learner_training_applications.training_course_id')
+            ->leftjoin('training_batches', 'training_batches.id', '=', 'learner_training_applications.training_batch_id')
             // Filter by learner
             ->whereIn('learner_training_applications.status', ['pending', 'approved'])
             // Search filter
@@ -122,7 +123,7 @@ class ApplicationListLivewire extends Component
                     $subQuery->where('learner_training_applications.application_number', 'like', '%' . $this->search . '%')
                         ->orWhere('centers.name', 'like', '%' . $this->search . '%')
                         ->orWhere('training_courses.course_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('learner_training_applications.status', 'like', '%' . $this->search . '%');
+                        ->orWhere('users.full_name_searchable', 'like', '%' . $this->search . '%');
                 });
             })
 

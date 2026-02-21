@@ -157,7 +157,6 @@
                          </div>
                     </div>
 
-                    {{-- Schedule Information --}}
                     <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">Batch Schedule Information</h2>
                          <div>
@@ -172,6 +171,12 @@
                                    @foreach($trainigScheduleItems as $schedule)
                                    <option value="{{ $schedule->id }}" {{ old('training_schedule_item_id') == $schedule->id ? 'selected' : '' }}>
                                         {{ $schedule->name }}
+                                        @if($schedule->schedule_days)
+                                        - {{ is_array($schedule->schedule_days) ? implode(', ', $schedule->schedule_days) : $schedule->schedule_days }}
+                                        @endif
+                                        @if($schedule->start_time && $schedule->end_time)
+                                        ({{ \Carbon\Carbon::parse($schedule->start_time)->format('g:i A') }} - {{ \Carbon\Carbon::parse($schedule->end_time)->format('g:i A') }})
+                                        @endif
                                    </option>
                                    @endforeach
                               </select>
@@ -204,6 +209,32 @@
                               @enderror
                          </div>
                     </div>
+
+                    @if (auth()->user()->hasRole('Super Admin'))
+                    {{-- Center Information --}}
+                    <div class="p-4 md:p-5 space-y-4">
+                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Center Information</h2>
+                         <div>
+                              <label for="center_id" class="block mb-2 text-sm font-medium text-gray-900">
+                                   Assigned Center
+                              </label>
+                              <select
+                                   id="center_id"
+                                   name="center_id"
+                                   class="bg-gray-50 border @error('center_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                   <option value="">Select center (optional)</option>
+                                   @foreach($centers as $center)
+                                   <option value="{{ $center->id }}" {{ old('center_id') == $center->id ? 'selected' : '' }}>
+                                        {{ $center->name }}
+                                   </option>
+                                   @endforeach
+                              </select>
+                              @error('center_id')
+                              <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                              @enderror
+                         </div>
+                    </div>
+                    @endif
 
                     {{-- Additional Information --}}
                     <div class="p-4 md:p-5 space-y-4">

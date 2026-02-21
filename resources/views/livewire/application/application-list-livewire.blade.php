@@ -16,18 +16,7 @@
                     New Student Application
                 </a>
             </div>
-            <!-- Filter Dropdown -->
-            <div class="relative">
-                <select class="pl-4 pr-10 py-2 text-sm border border-gray-200 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition appearance-none">
-                    <option value="">All Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                </select>
-                <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </div>
+
 
             <!-- Search -->
             <div class="relative">
@@ -41,13 +30,6 @@
                     class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg w-64 bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
             </div>
 
-            <!-- Export Button -->
-            <button class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 rounded-lg shadow-sm transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export
-            </button>
         </div>
     </div>
 
@@ -142,6 +124,7 @@
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Applicant Details</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Training Course</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Training Center</th>
+                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Assigned Batch</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Application Date</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                         <!-- <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Application Type</th> -->
@@ -182,6 +165,15 @@
                             <div class="font-medium">{{ $applicant->center_name }}</div>
                             <div class="text-xs text-gray-500">{{ $applicant->center_code }}</div>
                         </td>
+                        <td class="px-5 py-3.5 text-gray-600">
+                            @if($applicant->batch_name)
+                            <div class="font-medium">{{ $applicant->batch_name }} - {{ $applicant->batch_code }}</div>
+                            @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
+                                No batch assigned
+                            </span>
+                            @endif
+                        </td>
                         <td class="px-5 py-3.5 text-gray-500 font-mono text-xs">
                             {{ date('M d, Y', strtotime($applicant->application_date)) }}
                         </td>
@@ -209,16 +201,35 @@
                             </span>
                             @endif
                         </td>
-                        <td class="px-5 py-3.5 text-right">
+                        <td class="px-5 py-3.5 text-right border border-gray-200">
                             <div class="flex items-center justify-end gap-2">
                                 @if ($applicant->registration_type == "online" && $applicant->status == "pending")
-                                <button wire:click.prevent="toggleModalOnlineApplication({{ $applicant->id }})" class="text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
+                                <button wire:click.prevent="toggleModalOnlineApplication({{ $applicant->id }})"
+                                    class="inline-flex items-center gap-1 text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
                                     Review
                                 </button>
                                 <span class="text-gray-300">|</span>
                                 @endif
-                                <a href="{{ route('learner-training-applications.update.registered.application', $applicant->uuid) }}" class="text-gray-500 hover:text-gray-700 font-medium text-sm transition">
-                                    View →
+
+                                <a href="#"
+                                    class="inline-flex items-center gap-1 text-emerald-500 hover:text-emerald-700 font-medium text-sm transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                                    </svg>
+                                    Enroll
+                                </a>
+                                <span class="text-gray-300">|</span>
+
+                                <a href="{{ route('learner-training-applications.update.registered.application', $applicant->uuid) }}"
+                                    class="inline-flex items-center gap-1 text-gray-500 hover:text-gray-700 font-medium text-sm transition">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                    View
                                 </a>
                             </div>
                         </td>

@@ -432,11 +432,12 @@
                 </div>
 
                 <div class="p-4 md:p-5 space-y-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Training Course and Batch Assignement</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Training Course and Batch Assignment</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                         {{-- Training Course --}}
-                        <div>
+                        <div class="md:col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900">
                                 Training Course <span class="text-red-500">*</span>
                             </label>
@@ -453,22 +454,35 @@
                             @enderror
                         </div>
 
-                        {{-- Training Course Batch --}}
-                        <div>
+                        {{-- Center Selection --}}
+                        <div class="md:col-span-2">
+                            <label class="block mb-2 text-sm font-medium text-gray-900">
+                                Training Center <span class="text-red-500">*</span>
+                            </label>
+                            <select
+                                wire:model.live="centerId"
+                                @disabled(!$courseId)
+                                class="bg-gray-50 border @error('centerId') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+                                <option value="">{{ $courseId ? 'Select training center' : 'Select a course first' }}</option>
+                                @foreach ($centers as $center)
+                                <option value="{{ $center->id }}">{{ $center->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('centerId')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Training Batch --}}
+                        <div class="md:col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Student Training Batch <span class="text-red-500">*</span>
                             </label>
-
                             <select
                                 wire:model.live="batchId"
-                                class="bg-gray-50 border @error('batchId') border-red-500 @else border-gray-300 @enderror
-               text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
-               block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
-
-                                <option value="" class="text-gray-400">
-                                    — Select a training batch —
-                                </option>
-
+                                @disabled(!$centerId)
+                                class="bg-gray-50 border @error('batchId') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+                                <option value="">{{ $centerId ? '— Select a training batch —' : 'Select a center first' }}</option>
                                 @foreach ($batches as $batch)
                                 <option value="{{ $batch->id }}">
                                     {{ $batch->batch_name }}
@@ -478,14 +492,10 @@
                                 </option>
                                 @endforeach
                             </select>
-
                             @error('batchId')
-                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">
-                                {{ $message }}
-                            </p>
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
-
                     </div>
                 </div>
 

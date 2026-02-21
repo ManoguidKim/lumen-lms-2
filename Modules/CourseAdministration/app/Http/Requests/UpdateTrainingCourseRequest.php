@@ -53,6 +53,8 @@ class UpdateTrainingCourseRequest extends FormRequest
                 'max:255',
                 Rule::unique('training_courses', 'tr_number')->ignore($courseUuid, 'uuid'),
             ],
+            'course_center_id'   => 'required|array',
+            'course_center_id.*' => 'exists:centers,id',
         ];
     }
 

@@ -21,6 +21,7 @@ class TrainingScheduleItem extends Model
         'schedule_days', // json array of days
         'start_time', // date
         'end_time', // date
+        'center_id', // foreign key to centers table
     ];
 
     /**

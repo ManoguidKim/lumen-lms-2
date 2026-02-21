@@ -18,7 +18,8 @@ class CreateRegisterLearnerApplicationRequest extends FormRequest
     {
         return [
             'courseId' => ['required'],
-            'batchId' => ['required'],
+            'batchId' => ['nullable'],
+            'centerId' => ['required'],
 
             // Basic Information - Required Fields
             'firstName' => ['required', 'string', 'max:255'],
@@ -155,7 +156,7 @@ class CreateRegisterLearnerApplicationRequest extends FormRequest
         return [
             // Course and Batch indetifier
             'courseId.required' => 'The training course field is required.',
-            'batchId.required' => 'The training batch field is required.',
+            'centerId.required' => 'The training center field is required.',
 
             // Basic Information
             'firstName.required' => 'The first name field is required.',

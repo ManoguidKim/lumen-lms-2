@@ -10,6 +10,7 @@ use Modules\CourseAdministration\Http\Requests\UpdateTrainingBatchesRequest;
 use Modules\CourseAdministration\Models\TrainingBatch;
 use Modules\CourseAdministration\Models\TrainingCourse;
 use Modules\CourseAdministration\Models\TrainingScheduleItem;
+use Modules\Institution\Models\Center;
 
 class TrainingBatchController extends Controller
 {
@@ -28,15 +29,22 @@ class TrainingBatchController extends Controller
     public function create()
     {
         // Fetch related training courses for display
-        $trainingCourses = TrainingCourse::all();
+        $trainingCourses = TrainingCourse::query()
+            ->join('training_center_courses', 'training_courses.id', '=', 'training_center_courses.training_course_id')
+            ->where('training_center_courses.center_id', auth()->user()->center_id)
+            ->select('training_courses.*')
+            ->get();
         // Fetch related training schedule items for display
-        $trainigScheduleItems = TrainingScheduleItem::all();
+        $trainigScheduleItems = TrainingScheduleItem::where('center_id', auth()->user()->center_id)->get();
         // Fetch trainers for selection
         $trainers = User::role(['Trainer'])
+            ->where('center_id', auth()->user()->center_id)
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('courseadministration.training_batches.create', compact('trainingCourses', 'trainers', 'trainigScheduleItems'));
+        $centers = Center::all();
+
+        return view('courseadministration.training_batches.create', compact('trainingCourses', 'trainers', 'trainigScheduleItems', 'centers'));
     }
 
     /**
@@ -44,11 +52,20 @@ class TrainingBatchController extends Controller
      */
     public function store(CreateTrainingBatchesRequest $request)
     {
-        // Handle the creation of a new training batch
         $validatedData = $request->validated();
-        // Create the training batch
+
+        // Assign center_id based on role
+        $validatedData['center_id'] = auth()->user()->hasRole('Super Admin')
+            ? ($validatedData['center_id'] ?? null)
+            : auth()->user()->center_id;
+
+        if (is_null($validatedData['center_id'])) {
+            return redirect()->route('training_batches.index')
+                ->withInput()
+                ->with('error', 'No center assigned. Please select or assign a center before creating a batch.');
+        }
+
         TrainingBatch::create($validatedData);
-        // Redirect to the training batches index with a success message
         return redirect()
             ->route('training_batches.index')
             ->with('success', 'Training Batch created successfully.');
@@ -64,10 +81,15 @@ class TrainingBatchController extends Controller
         $trainingBatch = TrainingBatch::where('uuid', $uuid)->firstOrFail();
         // Fetch related training courses for display
         $trainingCourses = TrainingCourse::all();
+        // Fetch related training schedule items for display
+        $trainigScheduleItems = TrainingScheduleItem::all();
+        $currentTrainingScheduleItems = TrainingScheduleItem::where('id', $trainingBatch->training_schedule_item_id)->first();
         // Fetch trainers for selection
-        $trainers = User::orderBy('name', 'asc')->get();
+        $trainers = User::role(['Trainer'])
+            ->orderBy('name', 'asc')
+            ->get();
         // Return the view with the training batch data
-        return view('courseadministration.training_batches.view', compact('trainingBatch', 'trainingCourses', 'trainers'));
+        return view('courseadministration.training_batches.view', compact('trainingBatch', 'trainingCourses', 'trainers', 'trainigScheduleItems', 'currentTrainingScheduleItems'));
     }
 
     /**

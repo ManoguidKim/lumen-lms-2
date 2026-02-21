@@ -161,6 +161,33 @@
                          </div>
                     </div>
 
+                    {{-- Course Center --}}
+                    <div class="p-4 md:p-5 space-y-4">
+                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Center Assignment</h2>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div class="md:col-span-2" r">
+                                   <label for="tr_number" class="block mb-2 text-sm font-medium text-gray-900">
+                                        Select Center
+                                        <span class="text-red-600" id="tr_required_indicator" style="display: none;">*</span>
+                                   </label>
+                                   <select
+                                        name="course_center_id[]"
+                                        multiple
+                                        class="bg-gray-50 border @error('course_center_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                        @foreach($courseCenters as $center)
+                                        <option value="{{ $center->id }}"
+                                             {{ in_array($center->id, old('course_center_id', $selectedCenterIds)) ? 'selected' : '' }}>
+                                             {{ $center->name }}
+                                        </option>
+                                        @endforeach
+                                   </select>
+                                   @error('course_center_id')
+                                   <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                   @enderror
+                              </div>
+                         </div>
+                    </div>
+
                     {{-- Form Actions --}}
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                          <button

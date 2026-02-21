@@ -21,6 +21,7 @@ class CreateTrainingScheduleItemRequest extends FormRequest
 
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'center_id' => ['nullable', 'exists:centers,id'],
         ];
     }
 
@@ -33,6 +34,7 @@ class CreateTrainingScheduleItemRequest extends FormRequest
             'schedule_days.array' => 'Training days must be a valid array.',
             'start_time.required' => 'Start time is required.',
             'end_time.after' => 'End time must be after the start time.',
+            'center_id.exists' => 'Selected center does not exist.',
         ];
     }
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Modules\CourseAdministration\Models\TrainingCourse;
 
 // use Modules\Institution\Database\Factories\CenterFactory;
 
@@ -39,5 +40,12 @@ class Center extends Model
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo_path ? Storage::disk('public')->url($this->logo_path) : null;
+    }
+
+    public function trainingCourses()
+    {
+        return $this->belongsToMany(TrainingCourse::class, 'training_center_courses', 'center_id', 'training_course_id')
+            ->withPivot('is_active')
+            ->wherePivot('is_active', true);
     }
 }

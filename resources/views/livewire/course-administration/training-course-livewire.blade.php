@@ -63,6 +63,7 @@
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Duration</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Is Tesda Course</th>
                         <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">TR No.</th>
+                        <th class="px-5 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Centers</th>
                         <th class="px-5 py-3"></th>
                     </tr>
                 </thead>
@@ -90,11 +91,29 @@
                         <td class="px-5 py-3.5 text-gray-600">
                             {{ $course->tr_number }}
                         </td>
+                        <td class="px-5 py-3.5 text-gray-600">
+                            @if($course->center_names)
+                            <div class="flex flex-wrap gap-1">
+                                @foreach(explode(',', $course->center_names) as $center)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                    {{ trim($center) }}
+                                </span>
+                                @endforeach
+                            </div>
+                            @else
+                            <span class="text-gray-400 text-xs">No center</span>
+                            @endif
+                        </td>
                         <td class="px-5 py-3.5 text-right">
-                            <a href="{{ route('training_courses.show', $course->uuid) }}"
-                                class="text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
-                                View →
-                            </a>
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="#" class="text-indigo-500 hover:text-indigo-700 font-medium text-sm transition">
+                                    Course Requirements
+                                </a>
+                                <span class="text-gray-300">|</span>
+                                <a href="{{ route('training_courses.show', $course->uuid) }}" class="text-gray-500 hover:text-gray-700 font-medium text-sm transition">
+                                    View →
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @empty

@@ -26,6 +26,7 @@ class TrainingBatch extends Model
         'trainer_id',
         'notes',
         'training_schedule_item_id',
+        'center_id',
     ];
 
     protected $casts = [

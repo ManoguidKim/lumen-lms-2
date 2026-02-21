@@ -39,6 +39,7 @@ class UpdateTrainingBatchesRequest extends FormRequest
             'end_date' => ['required', 'date', 'after:start_date'],
             'max_participants' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'string', Rule::in(['open', 'full', 'ongoing', 'completed', 'cancelled'])],
+            'training_schedule_item_id' => ['integer', 'exists:training_schedule_items,id'],
             'trainer_id' => ['nullable', 'integer', 'exists:users,id'],
             'notes' => ['nullable', 'string'],
         ];
@@ -60,6 +61,7 @@ class UpdateTrainingBatchesRequest extends FormRequest
             'max_participants.min' => 'Maximum participants must be at least 0.',
             'status.in' => 'Invalid status selected.',
             'trainer_id.exists' => 'The selected trainer does not exist.',
+            'training_schedule_item_id.exists' => 'The selected schedule does not exist.',
         ];
     }
 }

@@ -30,6 +30,7 @@ class CreateTrainingBatchesRequest extends FormRequest
             'training_schedule_item_id' => ['integer', 'exists:training_schedule_items,id'],
             'trainer_id' => ['integer', 'exists:users,id'],
             'notes' => ['nullable', 'string'],
+            'center_id' => ['integer', 'exists:centers,id'],
         ];
     }
 
@@ -51,6 +52,7 @@ class CreateTrainingBatchesRequest extends FormRequest
             'status.in' => 'Invalid status selected.',
             'trainer_id.exists' => 'The selected trainer does not exist.',
             'training_schedule_item_id.exists' => 'The selected schedule does not exist.',
+            'center_id.exists' => 'The selected center does not exist.',
         ];
     }
 }
