@@ -5,12 +5,16 @@ namespace Modules\CourseAdministration\Models;
 use App\Traits\AdditionalUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
 // use Modules\CourseAdministration\Database\Factories\TrainingScheduleItemFactory;
 
 class TrainingScheduleItem extends Model
 {
     use AdditionalUuid;
     use HasFactory;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +27,15 @@ class TrainingScheduleItem extends Model
         'end_time', // date
         'center_id', // foreign key to centers table
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly($this->fillable) // logs all fillable fields
+            ->logOnlyDirty()           // only log what actually changed
+            ->dontSubmitEmptyLogs()    // skip if nothing changed
+            ->setDescriptionForEvent(fn(string $eventName) => "User was {$eventName}");
+    }
 
     /**
      * The attributes that should be cast.

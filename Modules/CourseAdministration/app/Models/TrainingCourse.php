@@ -6,6 +6,8 @@ use App\Traits\AdditionalUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Institution\Models\Center;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 // use Modules\CourseAdministration\Database\Factories\TrainingCourseFactory;
 
@@ -13,6 +15,7 @@ class TrainingCourse extends Model
 {
     use AdditionalUuid;
     use HasFactory;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +29,15 @@ class TrainingCourse extends Model
         'is_tesda_course',
         'tr_number',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly($this->fillable) // logs all fillable fields
+            ->logOnlyDirty()           // only log what actually changed
+            ->dontSubmitEmptyLogs()    // skip if nothing changed
+            ->setDescriptionForEvent(fn(string $eventName) => "User was {$eventName}");
+    }
 
     public function centers()
     {

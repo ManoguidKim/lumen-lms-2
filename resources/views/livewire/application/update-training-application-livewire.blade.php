@@ -31,44 +31,39 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {{-- Training Center --}}
-                    <div>
-                        <label for="center_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Training Center <span class="text-red-500">*</span>
+                    {{-- Training Course --}}
+                    <div class="md:col-span-2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Training Course <span class="text-red-500">*</span>
                         </label>
                         <select
-                            id="center_id"
-                            wire:model="center_id"
-                            class="bg-gray-50 border @error('center_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                            @if($status && $status !=='pending' ) disabled @endif>
-                            <option value="">Select training center</option>
-                            @foreach($centers as $center)
-                            <option value="{{ $center->id }}">{{ $center->name }} ({{ $center->address ?? 'No Address' }})</option>
+                            wire:model.live="training_course_id"
+                            class="bg-gray-50 border @error('training_course_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
+                            <option value="">Select training course</option>
+                            @foreach ($courses as $course)
+                            <option value="{{ $course->id }}">{{ $course->course_name }} - {{ $course->course_code }}</option>
                             @endforeach
                         </select>
-                        @error('center_id')
+                        @error('training_course_id')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Training Course --}}
-                    <div>
-                        <label for="training_course_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Training Course <span class="text-red-500">*</span>
+                    {{-- Center Selection --}}
+                    <div class="md:col-span-2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
+                            Training Center <span class="text-red-500">*</span>
                         </label>
                         <select
-                            id="training_course_id"
-                            wire:model="training_course_id"
-                            class="bg-gray-50 border @error('training_course_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-                            @if(!$center_id || ($status && $status !=='pending' )) disabled @endif>
-                            <option value="">{{ $center_id ? 'Select training course' : 'Please select a center first' }}</option>
-                            @foreach($availableCourses as $course)
-                            <option value="{{ $course->id }}">
-                                {{ $course->course_name }} ({{ $course->course_code }})
-                            </option>
+                            wire:model.live="center_id"
+                            @disabled(!$training_course_id)
+                            class="bg-gray-50 border @error('center_id') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed">
+                            <option value="">{{ $training_course_id ? 'Select training center' : 'Select a course first' }}</option>
+                            @foreach ($centers as $center)
+                            <option value="{{ $center->id }}">{{ $center->name }}</option>
                             @endforeach
                         </select>
-                        @error('training_course_id')
+                        @error('center_id')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -105,6 +100,8 @@
 
 
             <div class="flex flex-wrap items-center gap-3 p-4 md:p-5 border-t border-gray-200 dark:border-gray-600 rounded-b">
+
+                @if($status === 'pending')
                 <button wire:click.prevent="save" wire:confirm="Are you sure you want to update this application?"
                     class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 transition-all duration-150 transform hover:scale-105">
                     <svg class="w-4 h-4 inline mr-2 -mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -112,7 +109,9 @@
                     </svg>
                     Update Application
                 </button>
+                @endif
 
+                @if($status === 'pending')
                 <button wire:click.prevent="cancelApplication" wire:confirm="Are you sure you want to cancel this application? This action cannot be undone."
                     class="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 transition-all duration-150 transform hover:scale-105">
                     <svg class="w-4 h-4 inline mr-2 -mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -120,6 +119,7 @@
                     </svg>
                     Cancel Application
                 </button>
+                @endif
 
                 <a
                     href="{{ route('learner-training-applications.index') }}"

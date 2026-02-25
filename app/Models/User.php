@@ -12,6 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -19,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
     use AdditionalUuid;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -79,6 +82,15 @@ class User extends Authenticatable implements MustVerifyEmail
 
         'center_id',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly($this->fillable) // logs all fillable fields
+            ->logOnlyDirty()           // only log what actually changed
+            ->dontSubmitEmptyLogs()    // skip if nothing changed
+            ->setDescriptionForEvent(fn(string $eventName) => "User was {$eventName}");
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -3,6 +3,8 @@
 namespace App\Livewire\Application;
 
 use App\Models\User;
+use Exception;
+use FPDF;
 use Livewire\Component;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
 use Modules\CourseAdministration\Models\TrainingBatch;
@@ -61,10 +63,95 @@ class ApplicationListNoBatchLivewire extends Component
                 ->get();
         }
 
-
         return view('livewire.application.application-list-no-batch-livewire', [
             'applicants' => $applicants,
         ]);
+    }
+
+    public function printReport()
+    {
+        $reportDetails = LearnerTrainingApplication::query()
+            ->select('centers.name as center_name', 'training_courses.course_name', 'training_courses.course_code', 'learner_training_applications.*', 'users.full_name_searchable')
+            ->leftJoin('users', 'users.id', '=', 'learner_training_applications.user_id')
+            ->leftJoin('centers', 'centers.id', '=', 'learner_training_applications.center_id')
+            ->leftJoin('training_courses', 'training_courses.id', '=', 'learner_training_applications.training_course_id')
+            ->whereIn('learner_training_applications.status', ['pending'])
+            ->whereNull('learner_training_applications.training_batch_id')
+            ->orderBy('training_courses.course_name')
+            ->orderByRaw("FIELD(learner_training_applications.status, 'pending')")
+            ->get();
+
+        $groupedByCourse = $reportDetails->groupBy('course_name');
+
+        try {
+            $pdf = new FPDF();
+            $pdf->SetMargins(15, 15, 15);
+            $pageWidth = 180;
+
+            foreach ($groupedByCourse as $courseName => $learners) {
+                $pdf->AddPage();
+
+                // Title
+                $pdf->SetFont('Arial', 'B', 14);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->Cell(0, 10, 'Pending Learners Report', 0, 1, 'C');
+
+                // Date
+                $pdf->SetFont('Arial', '', 8);
+                $pdf->SetTextColor(100, 100, 100);
+                $pdf->Cell(0, 5, 'Generated: ' . now()->format('F d, Y  h:i A'), 0, 1, 'C');
+
+                $pdf->Ln(4);
+
+                // Course name
+                $pdf->SetFont('Arial', 'B', 10);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->Cell(0, 7, 'Course: ' . $courseName . ' (' . ($learners->first()->course_code ?? 'N/A') . ')', 0, 1, 'L');
+
+                $pdf->SetDrawColor(180, 180, 180);
+                $pdf->Line(15, $pdf->GetY(), 195, $pdf->GetY());
+                $pdf->Ln(3);
+
+                // Table header
+                $pdf->SetFillColor(230, 230, 230);
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetFont('Arial', 'B', 9);
+                $pdf->SetX(15);
+                $pdf->Cell(10, 7, '#',         1, 0, 'C', true);
+                $pdf->Cell(80, 7, 'Full Name', 1, 0, 'C', true);
+                $pdf->Cell(65, 7, 'Center',    1, 0, 'C', true);
+                $pdf->Cell(25, 7, 'Status',    1, 1, 'C', true);
+
+                // Table rows
+                $pdf->SetFont('Arial', '', 9);
+                $count = 1;
+                foreach ($learners as $learner) {
+                    $pdf->SetX(15);
+                    $pdf->Cell(10, 6, $count++,                         1, 0, 'C');
+                    $pdf->Cell(80, 6, trim($learner->full_name_searchable), 1, 0, 'L');
+                    $pdf->Cell(65, 6, $learner->center_name,            1, 0, 'L');
+                    $pdf->Cell(25, 6, ucfirst($learner->status),        1, 1, 'C');
+                }
+
+                // Total
+                $pdf->Ln(2);
+                $pdf->SetFont('Arial', 'I', 8);
+                $pdf->SetTextColor(80, 80, 80);
+                $pdf->SetX(15);
+                $pdf->Cell($pageWidth, 5, 'Total: ' . $learners->count() . ' learner(s)', 0, 1, 'R');
+
+                // Page number
+                $pdf->SetTextColor(150, 150, 150);
+                $pdf->SetFont('Arial', 'I', 7);
+                $pdf->SetXY(15, 282);
+                $pdf->Cell($pageWidth, 5, 'Page ' . $pdf->PageNo(), 0, 0, 'C');
+            }
+
+            $pdfContent = base64_encode($pdf->Output('S'));
+            $this->dispatch('open-pdf', pdf: $pdfContent);
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
     }
 
     public function assignTrainingBatch()

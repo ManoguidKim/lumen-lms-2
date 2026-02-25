@@ -6,6 +6,18 @@
             <p class="text-sm text-gray-400 mt-0.5">Review and manage all training applications</p>
         </div>
         <div class="flex items-center gap-3">
+
+            <div class="relative">
+                <button wire:click.prevent="printReport()"
+                    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg shadow-sm transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Print Report (No Assigned batch)
+                </button>
+            </div>
+
             <div class="relative">
                 <button wire:click.prevent="assignTrainingBatch()"
                     class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 rounded-lg shadow-sm transition">
@@ -287,4 +299,24 @@
         </div>
     </div>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.on('open-pdf', (event) => {
+                const base64 = event.pdf;
+                const byteCharacters = atob(base64);
+                const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], {
+                    type: 'application/pdf'
+                });
+                const blobUrl = URL.createObjectURL(blob);
+
+                const win = window.open(blobUrl, '_blank');
+                if (win) {
+                    win.onload = () => win.print();
+                }
+            });
+        });
+    </script>
 </div>

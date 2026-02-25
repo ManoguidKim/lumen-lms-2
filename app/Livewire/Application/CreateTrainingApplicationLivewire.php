@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use Modules\CourseAdministration\Http\Requests\CreateLearnerTrainingApplicationRequest;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
+use Modules\CourseAdministration\Models\TrainingBatch;
 use Modules\CourseAdministration\Models\TrainingCourse;
 use Modules\Institution\Models\Center;
 
@@ -14,6 +15,10 @@ class CreateTrainingApplicationLivewire extends Component
     // Form fields
     public $center_id = null;
     public $training_course_id = null;
+    public $courses = [];
+    public $centers = [];
+
+
     public $application_date;
     public $preferred_start_date = null;
     public $learner_remarks = null;
@@ -28,7 +33,6 @@ class CreateTrainingApplicationLivewire extends Component
     public $reviewer_name = null;
 
     // Collections
-    public $centers = [];
     public $availableCourses = [];
     public $selectedCenter = null;
     public $selectedCourse = null;
@@ -39,48 +43,27 @@ class CreateTrainingApplicationLivewire extends Component
 
     public function mount()
     {
-        $this->loadCenters();
+        // Check if the learner already has an approved application
+        // $this->checkLearnerCurrentApplicationStatus();
     }
 
-    private function loadCenters()
+    private function checkLearnerCurrentApplicationStatus()
     {
-        $this->centers = Center::where('status', 'active')
-            ->orderBy('name')
-            ->get();
-    }
+        $existingApplication = LearnerTrainingApplication::where('user_id', auth()->user()->id)
+            ->whereIn('status', ['approved'])
+            ->orderBy('application_date', 'desc')
+            ->first();
 
-    public function updatedCenterId($value)
-    {
-        $this->training_course_id = null;
-        $this->selectedCourse = null;
+        // Set batchId if there's an existing approved application to prevent batch assignment in the form
+        $trainingBatchId = $existingApplication ? $existingApplication->training_batch_id : null;
+        $trainingCenterId = $existingApplication ? $existingApplication->center_id : null;
 
-        if ($value) {
-            $this->loadCoursesByCenter();
-            $this->selectedCenter = Center::find($value);
-        } else {
-            $this->availableCourses = [];
-            $this->selectedCenter = null;
-        }
-    }
-
-    public function updatedTrainingCourseId($value)
-    {
-        if ($value) {
-            $this->selectedCourse = TrainingCourse::find($value);
-        } else {
-            $this->selectedCourse = null;
-        }
-    }
-
-    private function loadCoursesByCenter()
-    {
-        if ($this->center_id) {
-            $this->availableCourses = TrainingCourse::where('center_id', $this->center_id)
-                ->where('status', 'active')
-                ->orderBy('course_name')
-                ->get();
-        } else {
-            $this->availableCourses = [];
+        $trainingBatch = TrainingBatch::where(['id' => $trainingBatchId, 'center_id' => $trainingCenterId])->first();
+        if ($trainingBatch) {
+            if (in_array($trainingBatch->status, ['full', 'open', 'ongoing'])) {
+                session()->flash('error', 'This learner already has an active training batch. Please check the learner\'s current application status.');
+                return redirect()->route('learner-training-applications.index');
+            }
         }
     }
 
@@ -115,6 +98,17 @@ class CreateTrainingApplicationLivewire extends Component
 
     public function render()
     {
+        $this->courses = TrainingCourse::all();
+        // Load centers that offer the selected course
+        if ($this->training_course_id) {
+            $this->centers = Center::query()
+                ->join('training_center_courses', 'centers.id', '=', 'training_center_courses.center_id')
+                ->where('training_center_courses.training_course_id', $this->training_course_id)
+                ->where('training_center_courses.is_active', true)
+                ->select('centers.*')
+                ->get();
+        }
+
         return view('livewire.application.create-training-application-livewire');
     }
 }

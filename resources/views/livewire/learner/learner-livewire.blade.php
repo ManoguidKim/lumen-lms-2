@@ -325,6 +325,51 @@
                     </div>
                 </div>
 
+                {{-- User Documents --}}
+                <div class="p-4 md:p-5 space-y-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900">Documents</h2>
+                        <button type="button" wire:click="addDocument" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2">+ Add Document</button>
+                    </div>
+                    <div class="space-y-3">
+                        @forelse($documents as $index => $document)
+                        <div class="p-4 border border-gray-300 rounded-lg bg-gray-50" wire:key="document-{{ $index }}">
+                            <div class="flex justify-between items-center mb-3">
+                                <h4 class="font-medium text-gray-900">Document #{{ $index + 1 }}</h4>
+                                <button type="button" wire:click="removeDocument({{ $index }})" class="text-red-600 hover:text-red-800"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg></button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <select wire:model.live="documents.{{ $index }}.type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="">Select document type</option>
+                                    @foreach(\App\Enums\DocumentTypeEnum::cases() as $type)
+                                    <option value="{{ $type->value }}">{{ str_replace('_', ' ', $type->name) }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="file"
+                                    id="picture"
+                                    wire:model="documents.{{ $index }}.file"
+                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+
+                                @if(isset($document['file']) && is_string($document['file']))
+                                <div class="mt-2 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                    </svg>
+                                    <a href="{{ Storage::disk('s3')->temporaryUrl($document['file'], now()->addSecond(3)) }}" target="_blank" class="text-sm text-blue-600 hover:underline truncate">
+                                        {{ basename($document['file']) }}
+                                    </a>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @empty
+                        <p class="text-sm text-gray-500 text-center py-4">No documents added yet.</p>
+                        @endforelse
+                    </div>
+                </div>
+
                 {{-- Form Actions --}}
                 <div class="flex flex-wrap items-center gap-3 p-4 md:p-5 border-t border-gray-200 rounded-b">
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">{{ $isEditMode ? 'Update Learner' : 'Register Learner' }}</button>

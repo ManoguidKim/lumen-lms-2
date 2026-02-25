@@ -55,7 +55,7 @@ class CreateLearnerTrainingApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'center_id.exists' => 'The selected training center does not exist.',
+            'training_center_id.exists' => 'The selected training center does not exist.',
             'training_course_id.exists' => 'The selected training course does not exist.',
         ];
     }
