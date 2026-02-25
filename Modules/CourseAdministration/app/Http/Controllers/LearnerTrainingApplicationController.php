@@ -160,6 +160,7 @@ class LearnerTrainingApplicationController extends Controller
 
     public function confirmLearverApplication(Request $rquest, $userUuid)
     {
+        dd("SSS");
         $learner = User::where('uuid', $userUuid)->firstOrFail();
         $learner->is_confirmed = 1;
         $learner->save();

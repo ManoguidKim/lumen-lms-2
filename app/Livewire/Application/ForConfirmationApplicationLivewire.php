@@ -44,7 +44,8 @@ class ForConfirmationApplicationLivewire extends Component
     public function approveApplication($applicationId)
     {
         try {
-            LearnerTrainingApplication::find($applicationId)->update(['is_confirmed' => 0]);
+            $applciation = LearnerTrainingApplication::find($applicationId);
+            User::where('id', $applciation->user_id)->update(['is_confirmed' => 1]);
             session()->flash('success', 'Application approved successfully');
         } catch (Exception $e) {
             session()->flash('error', $e->getMessage());

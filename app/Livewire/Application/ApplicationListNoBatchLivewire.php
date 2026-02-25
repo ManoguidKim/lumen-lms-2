@@ -224,6 +224,8 @@ class ApplicationListNoBatchLivewire extends Component
                 ->where('user_id', $application->user_id)
                 ->exists();
 
+            User::where('id', $application->user_id)->update(['is_confirmed' => 1]);
+
             if (!$alreadyEnrolled) {
                 $trainingBatchStudentRepository->create([
                     'training_batch_id' => $this->trainingBatchId,

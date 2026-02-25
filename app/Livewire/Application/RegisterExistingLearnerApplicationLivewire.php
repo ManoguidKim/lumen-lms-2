@@ -312,6 +312,7 @@ class RegisterExistingLearnerApplicationLivewire extends Component
             'trainings' => isset($validated['trainings']) ? json_encode($validated['trainings']) : null,
             'licensure_examination' => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
             'competency_assessment' => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
+            'is_confirmed' => 1
         ];
         $this->user->update($data);
 
