@@ -116,12 +116,13 @@
                               {{-- Is TESDA Course --}}
                               <div class="md:col-span-2">
                                    <div class="flex items-center">
+                                        <input type="hidden" name="is_tesda_course" value="0">
                                         <input
                                              id="is_tesda_course"
                                              name="is_tesda_course"
                                              type="checkbox"
                                              value="1"
-                                             {{ old('is_tesda_course') ? 'checked' : '' }}
+                                             {{ old('is_tesda_course', '0') == '1' ? 'checked' : '' }}
                                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                                         <label for="is_tesda_course" class="ml-2 text-sm font-medium text-gray-900">
                                              This is a TESDA accredited course
@@ -138,6 +139,7 @@
                                         Training Regulation Number (TR Number)
                                         <span class="text-red-600" id="tr_required_indicator" style="display: none;">*</span>
                                    </label>
+
                                    <input
                                         type="text"
                                         id="tr_number"

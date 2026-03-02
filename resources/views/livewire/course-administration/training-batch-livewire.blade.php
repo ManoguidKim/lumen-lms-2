@@ -77,9 +77,8 @@
 
                         {{-- Batch Code --}}
                         <td class="px-5 py-4">
-                            <span class="inline-block font-mono text-xs font-medium bg-green-50 text-green-700 px-2.5 py-1 rounded-md">
-                                {{ $trainingBatch->batch_code }}
-                            </span>
+                            <div class="font-semibold text-gray-800 text-sm">{{ $trainingBatch->batch_name }}</div>
+                            <div class="text-xs font-mono text-gray-400 mt-0.5">{{ $trainingBatch->batch_code }}</div>
                         </td>
 
                         {{-- Course --}}

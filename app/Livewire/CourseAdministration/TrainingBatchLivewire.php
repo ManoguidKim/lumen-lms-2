@@ -17,6 +17,7 @@ class TrainingBatchLivewire extends Component
             ->select(
                 'training_batches.id',
                 'training_batches.uuid',
+                'training_batches.batch_name',
                 'training_batches.batch_code',
                 'training_courses.course_name',
                 'training_courses.course_code',

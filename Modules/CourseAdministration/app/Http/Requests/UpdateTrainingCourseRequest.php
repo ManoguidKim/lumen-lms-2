@@ -44,14 +44,14 @@ class UpdateTrainingCourseRequest extends FormRequest
             ],
             'is_tesda_course' => [
                 'required',
-                'boolean',
+                'in:0,1',
             ],
             'tr_number' => [
                 'nullable',
                 'required_if:is_tesda_course,1',
+                'required_if:is_tesda_course,true',
                 'string',
                 'max:255',
-                Rule::unique('training_courses', 'tr_number')->ignore($courseUuid, 'uuid'),
             ],
             'course_center_id'   => 'required|array',
             'course_center_id.*' => 'exists:centers,id',

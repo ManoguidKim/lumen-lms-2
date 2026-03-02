@@ -42,11 +42,12 @@ class CreateTrainingCourseRequest extends FormRequest
             ],
             'is_tesda_course' => [
                 'required',
-                'boolean',
+                'in:0,1',
             ],
             'tr_number' => [
                 'nullable',
                 'required_if:is_tesda_course,1',
+                'required_if:is_tesda_course,true',
                 'string',
                 'max:255',
                 'unique:training_courses,tr_number',
@@ -88,7 +89,6 @@ class CreateTrainingCourseRequest extends FormRequest
             'status.in' => 'Status must be either Active or Inactive.',
 
             // TESDA
-            'is_tesda_course.required' => 'Please specify if this is a TESDA course.',
             'is_tesda_course.boolean' => 'TESDA course value must be true or false.',
 
             // TR number

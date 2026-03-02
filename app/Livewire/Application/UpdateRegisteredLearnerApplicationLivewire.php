@@ -122,7 +122,8 @@ class UpdateRegisteredLearnerApplicationLivewire extends Component
 
         // Profile
         $this->uli                      = $this->learner->uli;
-        $this->picture                  = $this->learner->picture_path;
+
+        $this->currentPicturePath       = $this->learner->picture_path;
 
         // JSON fields
         // JSON fields
@@ -246,15 +247,17 @@ class UpdateRegisteredLearnerApplicationLivewire extends Component
         );
 
         // Handle picture upload
-        if ($this->picture) {
-            // Delete old picture from S3 if exists
+        // Handle picture upload
+        if ($this->picture && is_object($this->picture)) {
+            // ✅ Delete old picture from S3 if exists
             if ($this->currentPicturePath) {
                 Storage::disk('s3')->delete($this->currentPicturePath);
             }
 
-            // Store new picture to S3
+            // ✅ Store new picture to S3
             $picturePath = $this->picture->store('profile-pictures', 's3');
         } else {
+            // No new upload — keep existing path
             $picturePath = $this->currentPicturePath ?? null;
         }
 

@@ -1,6 +1,5 @@
 <div>
     <!-- resources/views/livewire/dashboard/card-dashboard-livewire.blade.php -->
-
     <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-4 mb-4">
 
         <!-- Citizen -->
@@ -120,4 +119,199 @@
             </div>
         </div>
     </div>
+
+    @if (auth()->user()->hasRole('Director'))
+    {{-- Chart Card --}}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-6">
+
+        {{-- Header --}}
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">Monthly Applications</h3>
+                <p class="text-sm text-gray-500 mt-0.5">
+                    Learner applications overview for {{ $selectedYear }}
+                </p>
+            </div>
+
+            {{-- Year Filter --}}
+            <select
+                wire:model.live="selectedYear"
+                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 w-full sm:w-auto">
+                @foreach($availableYears as $year)
+                <option value="{{ $year }}">{{ $year }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- Summary Stats --}}
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                <p class="text-2xl font-bold text-blue-600">{{ $totalApplications }}</p>
+                <p class="text-xs text-gray-500 mt-1">Total Applications</p>
+            </div>
+            <div class="bg-green-50 rounded-lg p-3 text-center">
+                <p class="text-2xl font-bold text-green-600">{{ $peakMonth }}</p>
+                <p class="text-xs text-gray-500 mt-1">Peak Month</p>
+            </div>
+            <div class="bg-purple-50 rounded-lg p-3 text-center">
+                <p class="text-2xl font-bold text-purple-600">
+                    {{ $totalApplications > 0 ? round($totalApplications / 12, 1) : 0 }}
+                </p>
+                <p class="text-xs text-gray-500 mt-1">Monthly Average</p>
+            </div>
+        </div>
+
+        {{-- Chart --}}
+        <div
+            wire:ignore
+            id="monthlyApplicationChart"
+            style="min-height: 350px;"></div>
+    </div>
+    @endif
+
+    <script>
+        (function() {
+            function renderChart() {
+                if (typeof ApexCharts === 'undefined') {
+                    setTimeout(renderChart, 100);
+                    return;
+                }
+
+                const el = document.querySelector('#monthlyApplicationChart');
+                if (!el) return;
+
+                const chart = new ApexCharts(el, {
+                    series: [{
+                        name: 'Applications',
+                        data: @json($monthlyData)
+                    }],
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: {
+                            show: false
+                        },
+                        fontFamily: 'Inter, sans-serif',
+                        animations: {
+                            enabled: true,
+                            easing: 'easeinout',
+                            speed: 600
+                        }
+                    },
+                    colors: ['#3b82f6'],
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 6,
+                            columnWidth: '55%',
+                            dataLabels: {
+                                position: 'top'
+                            },
+                            colors: {
+                                ranges: [{
+                                    from: 0,
+                                    to: 0,
+                                    color: '#e5e7eb'
+                                }]
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        offsetY: -22,
+                        style: {
+                            fontSize: '11px',
+                            fontWeight: '600',
+                            colors: ['#374151']
+                        },
+                        formatter: val => val > 0 ? val : ''
+                    },
+                    xaxis: {
+                        categories: [
+                            'January', 'February', 'March', 'April',
+                            'May', 'June', 'July', 'August',
+                            'September', 'October', 'November', 'December'
+                        ],
+                        axisBorder: {
+                            show: false
+                        },
+                        axisTicks: {
+                            show: false
+                        },
+                        labels: {
+                            rotate: -45,
+                            style: {
+                                colors: '#6b7280',
+                                fontSize: '12px'
+                            }
+                        }
+                    },
+                    yaxis: {
+                        min: 0,
+                        forceNiceScale: true,
+                        labels: {
+                            style: {
+                                colors: '#6b7280',
+                                fontSize: '12px'
+                            },
+                            formatter: val => Math.floor(val)
+                        }
+                    },
+                    grid: {
+                        borderColor: '#f3f4f6',
+                        strokeDashArray: 4,
+                        yaxis: {
+                            lines: {
+                                show: true
+                            }
+                        },
+                        xaxis: {
+                            lines: {
+                                show: false
+                            }
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 0
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: val => val + ' application(s)'
+                        },
+                        x: {
+                            formatter: (val, {
+                                dataPointIndex
+                            }) => {
+                                const months = [
+                                    'January', 'February', 'March', 'April',
+                                    'May', 'June', 'July', 'August',
+                                    'September', 'October', 'November', 'December'
+                                ];
+                                return months[dataPointIndex] + ' {{ $selectedYear }}';
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            filter: {
+                                type: 'darken',
+                                value: 0.85
+                            }
+                        }
+                    }
+                });
+
+                chart.render();
+
+                window.addEventListener('chartDataUpdated', event => {
+                    chart.updateSeries([{
+                        name: 'Applications',
+                        data: event.detail.data
+                    }]);
+                });
+            }
+
+            renderChart();
+        })();
+    </script>
 </div>

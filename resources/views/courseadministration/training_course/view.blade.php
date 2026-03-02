@@ -121,15 +121,18 @@
                     <div class="p-4 md:p-5 space-y-4">
                          <h2 class="text-lg font-semibold text-gray-900 mb-4">TESDA Information</h2>
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                               {{-- Is TESDA Course --}}
                               <div class="md:col-span-2">
                                    <div class="flex items-center">
+                                        {{-- Hidden input sends "0" when checkbox is unchecked --}}
+                                        <input type="hidden" name="is_tesda_course" value="0">
                                         <input
                                              id="is_tesda_course"
                                              name="is_tesda_course"
                                              type="checkbox"
                                              value="1"
-                                             {{ old('is_tesda_course', $course->is_tesda_course) ? 'checked' : '' }}
+                                             {{ old('is_tesda_course', $course->is_tesda_course) == '1' ? 'checked' : '' }}
                                              class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                                         <label for="is_tesda_course" class="ml-2 text-sm font-medium text-gray-900">
                                              This is a TESDA accredited course
