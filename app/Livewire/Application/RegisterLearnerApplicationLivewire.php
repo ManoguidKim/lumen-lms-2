@@ -276,30 +276,6 @@ class RegisterLearnerApplicationLivewire extends Component
                     ]);
                 }
             }
-
-            // Print Tesda form
-            $pdf      = $this->generateTesdaForm($currentRegiterLearner->toArray(), $applicationData->toArray());
-            $fileName = 'tesda_registration_' . $currentRegiterLearner->id . '_' . time() . '.pdf';
-            $tmpPath  = storage_path('app/temp/' . $fileName);
-
-            if (!file_exists(storage_path('app/temp'))) {
-                mkdir(storage_path('app/temp'), 0755, true);
-            }
-
-            $pdf->Output('F', $tmpPath);
-
-            // Upload to S3
-            $s3Path = Storage::disk('s3')->putFileAs(
-                'tesda-forms',
-                new File($tmpPath),
-                $fileName
-            );
-
-            // Save S3 path to user record
-            $currentRegiterLearner->update(['tesda_form_path' => $s3Path]);
-
-            // Clean up temp file
-            unlink($tmpPath);
         }
 
         $currentRegiterLearner->assignRole('Student');
@@ -328,6 +304,30 @@ class RegisterLearnerApplicationLivewire extends Component
                 'enrollment_status' => 'enrolled',
             ]);
         }
+
+        // Print Tesda form
+        $pdf      = $this->generateTesdaForm($currentRegiterLearner->toArray(), $applicationData->toArray());
+        $fileName = 'tesda_registration_' . $currentRegiterLearner->id . '_' . time() . '.pdf';
+        $tmpPath  = storage_path('app/temp/' . $fileName);
+
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $pdf->Output('F', $tmpPath);
+
+        // Upload to S3
+        $s3Path = Storage::disk('s3')->putFileAs(
+            'tesda-forms',
+            new File($tmpPath),
+            $fileName
+        );
+
+        // Save S3 path to user record
+        $currentRegiterLearner->update(['tesda_form_path' => $s3Path]);
+
+        // Clean up temp file
+        unlink($tmpPath);
 
         // update batch status if max participants reached
         $this->updateBatchStatusIfFull($this->batchId);

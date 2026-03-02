@@ -57,6 +57,7 @@
                         </div>
 
                         {{-- Picture Upload --}}
+                        {{-- Picture Upload --}}
                         <div class="md:col-span-3">
                             <label for="picture" class="block mb-2 text-sm font-medium text-gray-900">
                                 Profile Picture
@@ -65,15 +66,24 @@
                                 type="file"
                                 id="picture"
                                 wire:model="picture"
-                                accept="image/*"
+                                accept="image/*" ,
+                                autocomplete="off"
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 
-                            @if ($picture)
+                            @if ($picture && is_object($picture))
                             <div class="mt-2">
-                                <img src="{{ $picture->temporaryUrl() }}" class="h-20 w-20 object-cover rounded-lg">
+                                <img src="{{ $picture->temporaryUrl() }}"
+                                    class="h-20 w-20 object-cover rounded-lg border">
+                                <p class="text-xs text-gray-500 mt-1">New photo selected</p>
                             </div>
-                            @elseif($current_picture_path)
-                            <p class="mt-1 text-sm text-gray-500">Current picture: {{ basename($current_picture_path) }}</p>
+
+                            @elseif ($currentPicturePath)
+                            {{-- Existing photo from S3 --}}
+                            <div class="mt-2">
+                                <img src="{{ Storage::disk('s3')->temporaryUrl($currentPicturePath, now()->addMinutes(5)) }}"
+                                    class="h-20 w-20 object-cover rounded-lg border">
+                                <p class="text-xs text-gray-500 mt-1">Current photo</p>
+                            </div>
                             @endif
 
                             @error('picture')
@@ -361,7 +371,7 @@
                                 </select>
                                 <input type="file"
                                     id="picture"
-                                    wire:model="documents.{{ $index }}.file"
+                                    wire:model.live="documents.{{ $index }}.file"
                                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 
                                 @if(isset($document['file']) && is_string($document['file']))

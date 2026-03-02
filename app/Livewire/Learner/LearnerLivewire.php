@@ -18,7 +18,7 @@ class LearnerLivewire extends Component
     // Basic Information
     public $uli;
     public $picture;
-    public $current_picture_path;
+    public $currentPicturePath;
     public $school_name;
     public $school_address;
     public $client_type;
@@ -81,7 +81,7 @@ class LearnerLivewire extends Component
     protected function loadLearnerData()
     {
         $this->uli = $this->learner->uli;
-        $this->current_picture_path = $this->learner->picture_path;
+        $this->currentPicturePath       = $this->learner->picture_path;
         $this->school_name = $this->learner->school_name;
         $this->school_address = $this->learner->school_address;
         $this->client_type = $this->learner->client_type;
@@ -245,6 +245,17 @@ class LearnerLivewire extends Component
                 }
             }
 
+            if ($this->picture) {
+                // Delete old picture from S3 if exists
+                if ($this->currentPicturePath) {
+                    Storage::disk('s3')->delete($this->currentPicturePath);
+                }
+                // Store new picture to S3
+                $picturePath = $this->picture->store('profile-pictures', 's3');
+            } else {
+                $picturePath = $this->currentPicturePath ?? null;
+            }
+
             $this->validate(array_merge([
                 'picture' => 'nullable|image|max:2048',
                 'school_name' => 'nullable|string|max:255',
@@ -403,6 +414,7 @@ class LearnerLivewire extends Component
                 'school_address' => $this->school_address,
                 'client_type' => $this->client_type,
                 'registration_type' => $this->registration_type,
+                'picture_path' => $picturePath ?? null,
 
                 'sex' => $this->sex,
                 'civil_status' => $this->civil_status,
@@ -436,14 +448,6 @@ class LearnerLivewire extends Component
 
                 'agreed_to_terms' => $this->agreedToTerms,
             ];
-
-            // Handle picture upload
-            if ($this->picture) {
-                if ($this->isEditMode && $this->current_picture_path) {
-                    Storage::delete($this->current_picture_path);
-                }
-                $data['picture_path'] = $this->picture->store('learner-pictures', 's3');
-            }
 
             if ($this->isEditMode) {
                 $this->learner->update($data);

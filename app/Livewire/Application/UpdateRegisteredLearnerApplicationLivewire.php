@@ -247,7 +247,6 @@ class UpdateRegisteredLearnerApplicationLivewire extends Component
         );
 
         // Handle picture upload
-        // Handle picture upload
         if ($this->picture && is_object($this->picture)) {
             // ✅ Delete old picture from S3 if exists
             if ($this->currentPicturePath) {
@@ -325,6 +324,8 @@ class UpdateRegisteredLearnerApplicationLivewire extends Component
                 ]);
             }
         }
+
+
 
         return redirect()->route('learner-training-applications.list.registered.applicants')
             ->with('success', 'Learner application updated successfully');

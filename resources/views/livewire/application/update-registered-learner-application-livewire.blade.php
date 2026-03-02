@@ -495,8 +495,7 @@
                                     @endforeach
                                 </select>
                                 <input type="file"
-                                    id="picture"
-                                    wire:model="documents.{{ $index }}.file"
+                                    wire:model.live="documents.{{ $index }}.file"
                                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 
                                 @if(isset($document['file']) && is_string($document['file']))
