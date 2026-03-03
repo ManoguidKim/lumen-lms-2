@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
 use Modules\CourseAdministration\Models\TrainingBatch;
@@ -192,154 +193,145 @@ class RegisterLearnerApplicationLivewire extends Component
 
     public function save()
     {
+        $baseRules = (new CreateRegisterLearnerApplicationRequest())->rules();
+
+        // Add document validation dynamically
+        foreach ($this->documents as $index => $document) {
+            $baseRules["documents.{$index}.type"] = 'required|string';
+            if (isset($document['file']) && $document['file'] instanceof TemporaryUploadedFile) {
+                $baseRules["documents.{$index}.file"] = 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240';
+            }
+        }
+
         $validated = $this->validate(
-            (new CreateRegisterLearnerApplicationRequest())->rules(),
-            (new CreateRegisterLearnerApplicationRequest())->messages(),
+            $baseRules,
+            (new CreateRegisterLearnerApplicationRequest())->messages()
         );
 
-        $documentRules = [];
-        foreach ($this->documents as $index => $document) {
-            $isNewFile = isset($document['file']) && is_object($document['file']);
-            if ($isNewFile) {
-                $documentRules["documents.{$index}.file"] = 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240';
-            }
-        }
+        DB::transaction(function () use ($validated) {
 
-        // Handle picture upload
-        if ($this->picture) {
-            // Delete old picture from S3 if exists
-            if ($this->currentPicturePath) {
-                Storage::disk('s3')->delete($this->currentPicturePath);
+            if ($this->picture instanceof TemporaryUploadedFile) {
+                if ($this->currentPicturePath) {
+                    Storage::disk('s3')->delete($this->currentPicturePath);
+                }
+                $picturePath = $this->picture->store('profile-pictures', 's3');
+            } else {
+                $picturePath = $this->currentPicturePath ?? null;
             }
 
-            // Store new picture to S3
-            $picturePath = $this->picture->store('profile-pictures', 's3');
-        } else {
-            $picturePath = $this->currentPicturePath ?? null;
-        }
+            $data = [
+                'name'                          => $validated['firstName'],
+                'middle_name'                   => $validated['middleName'] ?? null,
+                'last_name'                     => $validated['lastName'],
+                'extension'                     => $validated['suffix'] ?? null,
+                'email'                         => $validated['contactEmail'],
+                'password'                      => Hash::make('password'),
+                'picture_path'                  => $picturePath,
+                'uli'                           => $validated['uli'],
+                'first_name'                    => $validated['firstName'],
+                'suffix'                        => $validated['suffix'] ?? null,
+                'school_name'                   => $validated['scholName'] ?? null,
+                'school_address'                => $validated['schoolAddress'] ?? null,
+                'client_type'                   => $validated['clientType'] ?? null,
+                'address_number_street'         => $validated['addressNumberStreet'] ?? null,
+                'address_barangay'              => $validated['addressBarangay'] ?? null,
+                'address_city'                  => $validated['addressCity'] ?? null,
+                'address_district'              => $validated['addressDistrict'] ?? null,
+                'address_province'              => $validated['addressProvince'] ?? null,
+                'address_region'                => $validated['addressRegion'] ?? null,
+                'address_zip_code'              => $validated['addressZipCode'] ?? null,
+                'mother_name'                   => $validated['motherName'] ?? null,
+                'father_name'                   => $validated['fatherName'] ?? null,
+                'sex'                           => $validated['sex'],
+                'civil_status'                  => $validated['civilStatus'],
+                'contact_tel'                   => $validated['contactTel'] ?? null,
+                'contact_mobile'                => $validated['contactMobile'] ?? null,
+                'contact_email'                 => $validated['contactEmail'] ?? null,
+                'contact_fax'                   => $validated['contactFax'] ?? null,
+                'contact_others'                => $validated['contactOthers'] ?? null,
+                'birth_date'                    => $validated['birthDate'],
+                'birth_place'                   => $validated['birthPlace'] ?? null,
+                'educational_attainment'        => $validated['educationalAttainment'] ?? null,
+                'educational_attainment_others' => $validated['educationalAttainmentOthers'] ?? null,
+                'employment_status'             => $validated['employmentStatus'] ?? null,
+                'registration_type'             => $validated['registrationType'] ?? $this->registrationType,
+                'work_experiences'              => isset($validated['workExperiences']) ? json_encode($validated['workExperiences']) : null,
+                'trainings'                     => isset($validated['trainings']) ? json_encode($validated['trainings']) : null,
+                'licensure_examination'         => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
+                'competency_assessment'         => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
+                'is_confirmed'                  => true,
+                'agreed_to_terms'               => $validated['agreedToTerms'],
+            ];
 
-        $data = [
-            'name' => $validated['firstName'],
-            'middle_name' => $validated['middleName'],
-            'last_name' => $validated['lastName'],
-            'extension' => $validated['suffix'],
-            'email' => $validated['contactEmail'],
-            'password' => Hash::make('password'),
-            'uli' => $validated['uli'],
-            'first_name' => $validated['firstName'],
-            'middle_name' => $validated['middleName'] ?? null,
-            'last_name' => $validated['lastName'],
-            'suffix' => $validated['suffix'] ?? null,
-            'picture_path' => $picturePath ?? null,
-            'school_name' => $validated['scholName'] ?? null,
-            'school_address' => $validated['schoolAddress'] ?? null,
-            'client_type' => $validated['clientType'] ?? null,
-            'address_number_street' => $validated['addressNumberStreet'] ?? null,
-            'address_barangay' => $validated['addressBarangay'] ?? null,
-            'address_city' => $validated['addressCity'] ?? null,
-            'address_district' => $validated['addressDistrict'] ?? null,
-            'address_province' => $validated['addressProvince'] ?? null,
-            'address_region' => $validated['addressRegion'] ?? null,
-            'address_zip_code' => $validated['addressZipCode'] ?? null,
-            'mother_name' => $validated['motherName'] ?? null,
-            'father_name' => $validated['fatherName'] ?? null,
-            'sex' => $validated['sex'],
-            'civil_status' => $validated['civilStatus'],
-            'contact_tel' => $validated['contactTel'] ?? null,
-            'contact_mobile' => $validated['contactMobile'] ?? null,
-            'contact_email' => $validated['contactEmail'] ?? null,
-            'contact_fax' => $validated['contactFax'] ?? null,
-            'contact_others' => $validated['contactOthers'] ?? null,
-            'birth_date' => $validated['birthDate'],
-            'birth_place' => $validated['birthPlace'] ?? null,
-            'educational_attainment' => $validated['educationalAttainment'] ?? null,
-            'educational_attainment_others' => $validated['educationalAttainmentOthers'] ?? null,
-            'employment_status' => $validated['employmentStatus'] ?? null,
-            'registration_type' => $validated['registrationType'] ?? $this->registrationType,
-            'work_experiences' => isset($validated['workExperiences']) ? json_encode($validated['workExperiences']) : null,
-            'trainings' => isset($validated['trainings']) ? json_encode($validated['trainings']) : null,
-            'licensure_examination' => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
-            'competency_assessment' => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
-            'is_confirmed' => true,
-            'agreed_to_terms' => $validated['agreedToTerms']
-        ];
-        $currentRegiterLearner = User::create($data);
+            $learner = User::create($data);
+            $learner->assignRole('Student');
 
-        if ($currentRegiterLearner) {
             foreach ($this->documents as $document) {
-                if (isset($document['file']) && is_object($document['file'])) {
+                if (isset($document['file']) && $document['file'] instanceof TemporaryUploadedFile) {
                     $filePath = $document['file']->store('learner-documents', 's3');
                     UserDocument::create([
-                        'user_id' => $currentRegiterLearner->id,
-                        'type' => $document['type'],
-                        'file' => $filePath,
+                        'user_id' => $learner->id,
+                        'type'    => $document['type'],
+                        'file'    => $filePath,
                     ]);
                 }
             }
-        }
 
-        $currentRegiterLearner->assignRole('Student');
-
-        // Registration Data
-        $applicationData = LearnerTrainingApplication::create([
-            'user_id' => $currentRegiterLearner->id,
-            'center_id' => $this->centerId,
-            'training_course_id' => $this->courseId,
-            'training_batch_id' => $this->batchId ?? null,
-            'status' => $this->batchId ? 'approved' : 'pending',
-            'application_number' => 'APP-' . date('Y') . '-' . Str::random(16),
-            'application_date' => date('Y-m-d'),
-            'reviewed_by' => auth()->user()->id,
-            'reviewed_at' => now(),
-            'registration_type' => 'onsite'
-        ]);
-
-        if (isset($this->batchId)) {
-            // Register in traing batch student
-            $trainingBatchStudentRepository = new TrainingBatchStudentRepository();
-            $trainingBatchStudentRepository->create([
-                'training_batch_id' => $this->batchId,
-                'user_id' => $currentRegiterLearner->id,
-                'enrollment_date' => date('Y-m-d'),
-                'enrollment_status' => 'enrolled',
+            $applicationData = LearnerTrainingApplication::create([
+                'user_id'            => $learner->id,
+                'center_id'          => $this->centerId,
+                'training_course_id' => $this->courseId,
+                'training_batch_id'  => $this->batchId ?? null,
+                'status'             => $this->batchId ? 'approved' : 'pending',
+                'application_number' => 'APP-' . date('Y') . '-' . Str::random(16),
+                'application_date'   => now()->format('Y-m-d'),
+                'reviewed_by'        => auth()->user()->id,
+                'reviewed_at'        => now(),
+                'registration_type'  => 'onsite',
             ]);
-        }
 
-        // Print Tesda form
-        $pdf      = $this->generateTesdaForm($currentRegiterLearner->toArray(), $applicationData->toArray());
-        $fileName = 'tesda_registration_' . $currentRegiterLearner->id . '_' . time() . '.pdf';
-        $tmpPath  = storage_path('app/temp/' . $fileName);
+            if ($this->batchId) {
+                // Register in training batch student
+                $trainingBatchStudentRepository = new TrainingBatchStudentRepository();
+                $trainingBatchStudentRepository->create([
+                    'training_batch_id'  => $this->batchId,
+                    'user_id'            => $learner->id,
+                    'enrollment_date'    => now()->format('Y-m-d'),
+                    'enrollment_status'  => 'enrolled',
+                ]);
+            }
 
-        if (!file_exists(storage_path('app/temp'))) {
-            mkdir(storage_path('app/temp'), 0755, true);
-        }
+            $pdf      = $this->generateTesdaForm($learner->toArray(), $applicationData->toArray());
+            $fileName = 'tesda_registration_' . $learner->id . '_' . time() . '.pdf';
+            $tmpPath  = storage_path('app/temp/' . $fileName);
 
-        $pdf->Output('F', $tmpPath);
+            if (!file_exists(storage_path('app/temp'))) {
+                mkdir(storage_path('app/temp'), 0755, true);
+            }
 
-        // Upload to S3
-        $s3Path = Storage::disk('s3')->putFileAs(
-            'tesda-forms',
-            new File($tmpPath),
-            $fileName
-        );
+            $pdf->Output('F', $tmpPath);
 
-        // Save S3 path to user record
-        $currentRegiterLearner->update(['tesda_form_path' => $s3Path]);
+            // Upload TESDA PDF to S3
+            $s3Path = Storage::disk('s3')->putFileAs(
+                'tesda-forms',
+                new File($tmpPath),
+                $fileName
+            );
 
-        // Clean up temp file
-        unlink($tmpPath);
+            $learner->update(['tesda_form_path' => $s3Path]);
 
-        // update batch status if max participants reached
-        $this->updateBatchStatusIfFull($this->batchId);
+            // Cleanup temp file
+            unlink($tmpPath);
 
-        // Redirect to index
-        if (isset($this->batchId)) {
-            return redirect()->route('learner-applications-list.index')
-                ->with('success', 'Learner application registered successfully');
-        } else {
-            return redirect()->route('learner-applications-list.index')
-                ->with('success', 'Learner application submitted successfully and waiting for training batch assignment');
-        }
+            // Update batch status if full
+            $this->updateBatchStatusIfFull($this->batchId);
+        });
+
+        // Redirect to list
+        return redirect()->route('learner-applications-list.index')
+            ->with('success', isset($this->batchId)
+                ? 'Learner application registered successfully'
+                : 'Learner application submitted successfully and waiting for training batch assignment');
     }
 
     private function updateBatchStatusIfFull($batchId)

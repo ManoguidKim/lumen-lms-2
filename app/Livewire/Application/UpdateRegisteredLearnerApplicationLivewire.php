@@ -6,9 +6,11 @@ use App\Http\Requests\UpdateLearnerRequest;
 use App\Http\Requests\UpdateRegisterLearnerApplicationRequest;
 use App\Models\User;
 use App\Models\UserDocument;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 use Modules\CourseAdministration\Models\LearnerTrainingApplication;
 use Modules\CourseAdministration\Models\TrainingBatch;
@@ -238,96 +240,120 @@ class UpdateRegisteredLearnerApplicationLivewire extends Component
             'nullable',
             'email',
             'max:255',
-            Rule::unique('users', 'email')->ignore($this->learner->id)
+            Rule::unique('users', 'email')->ignore($this->learner->id),
         ];
+
+        // Add dynamic document validation rules
+        foreach ($this->documents as $index => $document) {
+
+            $rules["documents.{$index}.type"] = 'required|string';
+
+            if (isset($document['file']) && $document['file'] instanceof TemporaryUploadedFile) {
+                $rules["documents.{$index}.file"] = 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240';
+            }
+        }
 
         $validated = $this->validate(
             $rules,
             (new UpdateLearnerRequest())->messages(),
         );
 
-        // Handle picture upload
-        if ($this->picture && is_object($this->picture)) {
-            // ✅ Delete old picture from S3 if exists
-            if ($this->currentPicturePath) {
-                Storage::disk('s3')->delete($this->currentPicturePath);
+        DB::transaction(function () use ($validated) {
+
+            if ($this->picture instanceof TemporaryUploadedFile) {
+                // Delete old picture if exists
+                if ($this->currentPicturePath) {
+                    Storage::disk('s3')->delete($this->currentPicturePath);
+                }
+
+                $picturePath = $this->picture->store('profile-pictures', 's3');
+            } else {
+                $picturePath = $this->currentPicturePath ?? null;
             }
 
-            // ✅ Store new picture to S3
-            $picturePath = $this->picture->store('profile-pictures', 's3');
-        } else {
-            // No new upload — keep existing path
-            $picturePath = $this->currentPicturePath ?? null;
-        }
+            $data = [
+                'uli'                           => $validated['uli'] ?? null,
+                'name'                          => $validated['firstName'],
+                'middle_name'                   => $validated['middleName'] ?? null,
+                'last_name'                     => $validated['lastName'],
+                'extension'                     => $validated['suffix'] ?? null,
+                'picture_path'                  => $picturePath,
+                'email'                         => $validated['contactEmail'],
+                'school_name'                   => $validated['schoolName'] ?? null,
+                'school_address'                => $validated['schoolAddress'] ?? null,
+                'client_type'                   => $validated['clientType'] ?? null,
+                'address_number_street'         => $validated['addressNumberStreet'] ?? null,
+                'address_barangay'              => $validated['addressBarangay'] ?? null,
+                'address_city'                  => $validated['addressCity'] ?? null,
+                'address_district'              => $validated['addressDistrict'] ?? null,
+                'address_province'              => $validated['addressProvince'] ?? null,
+                'address_region'                => $validated['addressRegion'] ?? null,
+                'address_zip_code'              => $validated['addressZipCode'] ?? null,
+                'mother_name'                   => $validated['motherName'] ?? null,
+                'father_name'                   => $validated['fatherName'] ?? null,
+                'sex'                           => $validated['sex'],
+                'civil_status'                  => $validated['civilStatus'],
+                'contact_tel'                   => $validated['contactTel'] ?? null,
+                'contact_mobile'                => $validated['contactMobile'] ?? null,
+                'contact_email'                 => $validated['contactEmail'] ?? null,
+                'contact_fax'                   => $validated['contactFax'] ?? null,
+                'contact_others'                => $validated['contactOthers'] ?? null,
+                'birth_date'                    => $validated['birthDate'],
+                'birth_place'                   => $validated['birthPlace'] ?? null,
+                'educational_attainment'        => $validated['educationalAttainment'] ?? null,
+                'educational_attainment_others' => $validated['educationalAttainmentOthers'] ?? null,
+                'employment_status'             => $validated['employmentStatus'] ?? null,
+                'work_experiences'              => isset($validated['workExperiences']) ? json_encode($validated['workExperiences']) : null,
+                'trainings'                     => isset($validated['trainings']) ? json_encode($validated['trainings']) : null,
+                'licensure_examination'         => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
+                'competency_assessment'         => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
+            ];
 
-        $data = [
-            'uli'                           => $validated['uli'] ?? null,
-            'name'                          => $validated['firstName'],
-            'middle_name'                   => $validated['middleName'] ?? null,
-            'last_name'                     => $validated['lastName'],
-            'extension'                     => $validated['suffix'] ?? null,
-            'picture_path'                  => $picturePath ?? null,
-            'email'                         => $validated['contactEmail'], // login email updated
-            'school_name'                   => $validated['schoolName'] ?? null,
-            'school_address'                => $validated['schoolAddress'] ?? null,
-            'client_type'                   => $validated['clientType'] ?? null,
-            'address_number_street'         => $validated['addressNumberStreet'] ?? null,
-            'address_barangay'              => $validated['addressBarangay'] ?? null,
-            'address_city'                  => $validated['addressCity'] ?? null,
-            'address_district'              => $validated['addressDistrict'] ?? null,
-            'address_province'              => $validated['addressProvince'] ?? null,
-            'address_region'                => $validated['addressRegion'] ?? null,
-            'address_zip_code'              => $validated['addressZipCode'] ?? null,
-            'mother_name'                   => $validated['motherName'] ?? null,
-            'father_name'                   => $validated['fatherName'] ?? null,
-            'sex'                           => $validated['sex'],
-            'civil_status'                  => $validated['civilStatus'],
-            'contact_tel'                   => $validated['contactTel'] ?? null,
-            'contact_mobile'                => $validated['contactMobile'] ?? null,
-            'contact_email'                 => $validated['contactEmail'] ?? null,
-            'contact_fax'                   => $validated['contactFax'] ?? null,
-            'contact_others'                => $validated['contactOthers'] ?? null,
-            'birth_date'                    => $validated['birthDate'],
-            'birth_place'                   => $validated['birthPlace'] ?? null,
-            'educational_attainment'        => $validated['educationalAttainment'] ?? null,
-            'educational_attainment_others' => $validated['educationalAttainmentOthers'] ?? null,
-            'employment_status'             => $validated['employmentStatus'] ?? null,
-            'work_experiences'              => isset($validated['workExperiences']) ? json_encode($validated['workExperiences']) : null,
-            'trainings'                     => isset($validated['trainings']) ? json_encode($validated['trainings']) : null,
-            'licensure_examination'         => isset($validated['licensureExamination']) ? json_encode($validated['licensureExamination']) : null,
-            'competency_assessment'         => isset($validated['competencyAssessment']) ? json_encode($validated['competencyAssessment']) : null,
-        ];
+            $this->learner->update($data);
 
-        $this->learner->update($data);
+            foreach ($this->documents as $document) {
 
-        foreach ($this->documents as $document) {
-            $isNewFile = isset($document['file']) && is_object($document['file']);
+                $isNewFile = isset($document['file'])
+                    && $document['file'] instanceof TemporaryUploadedFile;
 
-            if ($isNewFile) {
-                $filePath = $document['file']->store('learner-documents', 's3');
+                // If uploading new file
+                if ($isNewFile) {
 
-                if (isset($document['id'])) {
+                    $filePath = $document['file']->store('learner-documents', 's3');
+
+                    if (isset($document['id'])) {
+
+                        $existing = UserDocument::find($document['id']);
+
+                        if ($existing && $existing->file) {
+                            Storage::disk('s3')->delete($existing->file);
+                        }
+
+                        $existing?->update([
+                            'type' => $document['type'],
+                            'file' => $filePath,
+                        ]);
+                    } else {
+
+                        UserDocument::create([
+                            'user_id' => $this->learner->id,
+                            'type'    => $document['type'],
+                            'file'    => $filePath,
+                        ]);
+                    }
+                }
+                // If only updating document type
+                elseif (isset($document['id'])) {
+
                     UserDocument::where('id', $document['id'])->update([
                         'type' => $document['type'],
-                        'file' => $filePath,
-                    ]);
-                } else {
-                    UserDocument::create([
-                        'user_id' => $this->learner->id,
-                        'type' => $document['type'],
-                        'file' => $filePath,
                     ]);
                 }
-            } elseif (isset($document['id'])) {
-                UserDocument::where('id', $document['id'])->update([
-                    'type' => $document['type'],
-                ]);
             }
-        }
+        });
 
-
-
-        return redirect()->route('learner-training-applications.list.registered.applicants')
+        return redirect()
+            ->route('learner-training-applications.list.registered.applicants')
             ->with('success', 'Learner application updated successfully');
     }
 

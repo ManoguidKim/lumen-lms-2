@@ -20,7 +20,7 @@
             </div>
             @endif
 
-            <form wire:submit.prevent="save">
+            <form wire:submit.prevent="save" enctype="multipart/form-data">
 
                 <div class="p-4 md:p-5 space-y-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Unique Learner Identifier</h2>
@@ -132,7 +132,6 @@
                             @enderror
                         </div>
 
-                        {{-- Picture Upload --}}
                         <div class="md:col-span-3">
                             <label for="picture" class="block mb-2 text-sm font-medium text-gray-900">
                                 Profile Picture
@@ -141,24 +140,16 @@
                                 type="file"
                                 id="picture"
                                 wire:model="picture"
-                                accept="image/*" ,
-                                autocomplete="off"
+                                accept="image/*"
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 
-                            @if ($picture && is_object($picture))
+                            @if ($picture)
                             <div class="mt-2">
-                                <img src="{{ $picture->temporaryUrl() }}"
-                                    class="h-20 w-20 object-cover rounded-lg border">
-                                <p class="text-xs text-gray-500 mt-1">New photo selected</p>
+                                <img src="{{ Storage::disk('s3')->temporaryUrl($picture, now()->addMinutes(5)) }}"
+                                    class="h-20 w-20 object-cover rounded-lg">
                             </div>
-
-                            @elseif ($currentPicturePath)
-                            {{-- Existing photo from S3 --}}
-                            <div class="mt-2">
-                                <img src="{{ Storage::disk('s3')->temporaryUrl($currentPicturePath, now()->addMinutes(5)) }}"
-                                    class="h-20 w-20 object-cover rounded-lg border">
-                                <p class="text-xs text-gray-500 mt-1">Current photo</p>
-                            </div>
+                            @elseif($currentPicturePath)
+                            <p class="mt-1 text-sm text-gray-500">Current picture: {{ basename($currentPicturePath) }}</p>
                             @endif
 
                             @error('picture')
@@ -488,14 +479,14 @@
                                     </svg></button>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
-                                <select wire:model.live="documents.{{ $index }}.type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <select wire:model="documents.{{ $index }}.type" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option value="">Select document type</option>
                                     @foreach(\App\Enums\DocumentTypeEnum::cases() as $type)
                                     <option value="{{ $type->value }}">{{ str_replace('_', ' ', $type->name) }}</option>
                                     @endforeach
                                 </select>
                                 <input type="file"
-                                    id="picture"
+                                    id="document_file_{{ $index }}"
                                     wire:model="documents.{{ $index }}.file"
                                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 

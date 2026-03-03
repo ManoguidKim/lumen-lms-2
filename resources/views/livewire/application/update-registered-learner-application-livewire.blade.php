@@ -20,7 +20,7 @@
             </div>
             @endif
 
-            <form wire:submit.prevent="save">
+            <form wire:submit.prevent="save" enctype="multipart/form-data">
                 {{-- Basic Information --}}
 
                 <div class="p-4 md:p-5 space-y-4 border-b border-gray-200">
@@ -495,6 +495,7 @@
                                     @endforeach
                                 </select>
                                 <input type="file"
+                                    id="document_file_{{ $index }}"
                                     wire:model.live="documents.{{ $index }}.file"
                                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
 

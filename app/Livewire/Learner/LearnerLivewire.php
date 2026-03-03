@@ -4,8 +4,10 @@ namespace App\Livewire\Learner;
 
 use App\Models\User;
 use App\Models\UserDocument;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
 class LearnerLivewire extends Component
@@ -237,26 +239,21 @@ class LearnerLivewire extends Component
     public function save()
     {
         try {
+
             $documentRules = [];
             foreach ($this->documents as $index => $document) {
-                $isNewFile = isset($document['file']) && is_object($document['file']);
-                if ($isNewFile) {
-                    $documentRules["documents.{$index}.file"] = 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240';
-                }
-            }
 
-            if ($this->picture) {
-                // Delete old picture from S3 if exists
-                if ($this->currentPicturePath) {
-                    Storage::disk('s3')->delete($this->currentPicturePath);
+                $isNewFile = isset($document['file']) &&
+                    $document['file'] instanceof TemporaryUploadedFile;
+
+                if ($isNewFile) {
+                    $documentRules["documents.{$index}.file"] =
+                        'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240';
                 }
-                // Store new picture to S3
-                $picturePath = $this->picture->store('profile-pictures', 's3');
-            } else {
-                $picturePath = $this->currentPicturePath ?? null;
             }
 
             $this->validate(array_merge([
+
                 'picture' => 'nullable|image|max:2048',
                 'school_name' => 'nullable|string|max:255',
                 'school_address' => 'nullable|string',
@@ -313,178 +310,129 @@ class LearnerLivewire extends Component
                 'competency_assessment.*.expiry_date' => 'nullable|string|max:255',
 
                 'agreedToTerms' => 'accepted',
+
             ], $documentRules), [
+
                 'picture.image' => 'The file must be an image.',
                 'picture.max' => 'The picture size must not exceed 2MB.',
-                'school_name.string' => 'The school name must be a valid text.',
-                'school_name.max' => 'The school name must not exceed 255 characters.',
-                'school_address.string' => 'The school address must be a valid text.',
-                'client_type.in' => 'Please select a valid client type.',
                 'registration_type.required' => 'The registration type is required.',
                 'registration_type.in' => 'Please select a valid registration type.',
-
-                'sex.in' => 'Please select a valid sex.',
-                'civil_status.in' => 'Please select a valid civil status.',
-                'birth_date.date' => 'The birth date must be a valid date.',
-                'birth_place.string' => 'The birth place must be a valid text.',
-                'birth_place.max' => 'The birth place must not exceed 255 characters.',
-                'mother_name.string' => 'The mother\'s name must be a valid text.',
-                'mother_name.max' => 'The mother\'s name must not exceed 255 characters.',
-                'father_name.string' => 'The father\'s name must be a valid text.',
-                'father_name.max' => 'The father\'s name must not exceed 255 characters.',
-
-                'address_number_street.string' => 'The street address must be a valid text.',
-                'address_barangay.string' => 'The barangay must be a valid text.',
-                'address_barangay.max' => 'The barangay must not exceed 255 characters.',
-                'address_district.string' => 'The district must be a valid text.',
-                'address_district.max' => 'The district must not exceed 255 characters.',
-                'address_city.string' => 'The city must be a valid text.',
-                'address_city.max' => 'The city must not exceed 255 characters.',
-                'address_province.string' => 'The province must be a valid text.',
-                'address_province.max' => 'The province must not exceed 255 characters.',
-                'address_region.string' => 'The region must be a valid text.',
-                'address_region.max' => 'The region must not exceed 255 characters.',
-                'address_zip_code.string' => 'The ZIP code must be a valid text.',
-                'address_zip_code.max' => 'The ZIP code must not exceed 10 characters.',
-
-                'contact_mobile.string' => 'The mobile number must be a valid text.',
-                'contact_mobile.max' => 'The mobile number must not exceed 255 characters.',
-                'contact_tel.string' => 'The telephone number must be a valid text.',
-                'contact_tel.max' => 'The telephone number must not exceed 255 characters.',
-                'contact_email.email' => 'The email must be a valid email address.',
-                'contact_email.max' => 'The email must not exceed 255 characters.',
-                'contact_fax.string' => 'The fax number must be a valid text.',
-                'contact_fax.max' => 'The fax number must not exceed 255 characters.',
-                'contact_others.string' => 'The other contact information must be a valid text.',
-
-                'educational_attainment.in' => 'Please select a valid educational attainment.',
-                'educational_attainment_others.string' => 'The educational attainment (others) must be a valid text.',
-                'educational_attainment_others.max' => 'The educational attainment (others) must not exceed 255 characters.',
-                'employment_status.in' => 'Please select a valid employment status.',
-
-                'work_experiences.array' => 'Work experiences must be a valid list.',
-                'work_experiences.*.company.string' => 'The company name must be a valid text.',
-                'work_experiences.*.company.max' => 'The company name must not exceed 255 characters.',
-                'work_experiences.*.position.string' => 'The position must be a valid text.',
-                'work_experiences.*.position.max' => 'The position must not exceed 255 characters.',
-                'work_experiences.*.duration.string' => 'The duration must be a valid text.',
-                'work_experiences.*.duration.max' => 'The duration must not exceed 255 characters.',
-                'work_experiences.*.responsibilities.string' => 'The responsibilities must be a valid text.',
-
-                'trainings.array' => 'Trainings must be a valid list.',
-                'trainings.*.title.string' => 'The training title must be a valid text.',
-                'trainings.*.title.max' => 'The training title must not exceed 255 characters.',
-                'trainings.*.provider.string' => 'The training provider must be a valid text.',
-                'trainings.*.provider.max' => 'The training provider must not exceed 255 characters.',
-                'trainings.*.date.string' => 'The training date must be a valid text.',
-                'trainings.*.date.max' => 'The training date must not exceed 255 characters.',
-                'trainings.*.hours.string' => 'The training hours must be a valid text.',
-                'trainings.*.hours.max' => 'The training hours must not exceed 255 characters.',
-
-                'licensure_examination.array' => 'Licensure examinations must be a valid list.',
-                'licensure_examination.*.title.string' => 'The examination title must be a valid text.',
-                'licensure_examination.*.title.max' => 'The examination title must not exceed 255 characters.',
-                'licensure_examination.*.license_number.string' => 'The license number must be a valid text.',
-                'licensure_examination.*.license_number.max' => 'The license number must not exceed 255 characters.',
-                'licensure_examination.*.date_taken.string' => 'The date taken must be a valid text.',
-                'licensure_examination.*.date_taken.max' => 'The date taken must not exceed 255 characters.',
-                'licensure_examination.*.validity.string' => 'The validity must be a valid text.',
-                'licensure_examination.*.validity.max' => 'The validity must not exceed 255 characters.',
-
-                'competency_assessment.array' => 'Competency assessments must be a valid list.',
-                'competency_assessment.*.qualification.string' => 'The qualification must be a valid text.',
-                'competency_assessment.*.qualification.max' => 'The qualification must not exceed 255 characters.',
-                'competency_assessment.*.certificate_number.string' => 'The certificate number must be a valid text.',
-                'competency_assessment.*.certificate_number.max' => 'The certificate number must not exceed 255 characters.',
-                'competency_assessment.*.date_issued.string' => 'The date issued must be a valid text.',
-                'competency_assessment.*.date_issued.max' => 'The date issued must not exceed 255 characters.',
-                'competency_assessment.*.expiry_date.string' => 'The expiry date must be a valid text.',
-                'competency_assessment.*.expiry_date.max' => 'The expiry date must not exceed 255 characters.',
-
-                'documents.*.file.file' => 'The document must be a valid file.',
+                'agreedToTerms.accepted' => 'You must agree to the certification statement before submitting.',
                 'documents.*.file.mimes' => 'The document must be a file of type: jpg, jpeg, png, pdf.',
                 'documents.*.file.max' => 'The document must not exceed 10MB.',
 
-                'agreedToTerms.accepted' => 'You must agree to the certification statement before submitting.',
             ]);
 
-            $data = [
-                'uli' => $this->uli,
-                'school_name' => $this->school_name,
-                'school_address' => $this->school_address,
-                'client_type' => $this->client_type,
-                'registration_type' => $this->registration_type,
-                'picture_path' => $picturePath ?? null,
+            DB::transaction(function () {
 
-                'sex' => $this->sex,
-                'civil_status' => $this->civil_status,
-                'birth_date' => $this->birth_date,
-                'birth_place' => $this->birth_place,
-                'mother_name' => $this->mother_name,
-                'father_name' => $this->father_name,
+                if ($this->picture instanceof TemporaryUploadedFile) {
 
-                'address_number_street' => $this->address_number_street,
-                'address_barangay' => $this->address_barangay,
-                'address_district' => $this->address_district,
-                'address_city' => $this->address_city,
-                'address_province' => $this->address_province,
-                'address_region' => $this->address_region,
-                'address_zip_code' => $this->address_zip_code,
-
-                'contact_mobile' => $this->contact_mobile,
-                'contact_tel' => $this->contact_tel,
-                'contact_email' => $this->contact_email,
-                'contact_fax' => $this->contact_fax,
-                'contact_others' => $this->contact_others,
-
-                'educational_attainment' => $this->educational_attainment,
-                'educational_attainment_others' => $this->educational_attainment_others,
-                'employment_status' => $this->employment_status,
-
-                'work_experiences' => !empty($this->work_experiences) ? json_encode($this->work_experiences) : null,
-                'trainings' => !empty($this->trainings) ? json_encode($this->trainings) : null,
-                'licensure_examination' => !empty($this->licensure_examination) ? json_encode($this->licensure_examination) : null,
-                'competency_assessment' => !empty($this->competency_assessment) ? json_encode($this->competency_assessment) : null,
-
-                'agreed_to_terms' => $this->agreedToTerms,
-            ];
-
-            if ($this->isEditMode) {
-                $this->learner->update($data);
-
-                foreach ($this->documents as $document) {
-                    $isNewFile = isset($document['file']) && is_object($document['file']);
-
-                    if ($isNewFile) {
-                        $filePath = $document['file']->store('learner-documents', 's3');
-
-                        if (isset($document['id'])) {
-                            UserDocument::where('id', $document['id'])->update([
-                                'type' => $document['type'],
-                                'file' => $filePath,
-                            ]);
-                        } else {
-                            UserDocument::create([
-                                'user_id' => $this->learner->id,
-                                'type' => $document['type'],
-                                'file' => $filePath,
-                            ]);
-                        }
-                    } elseif (isset($document['id'])) {
-                        UserDocument::where('id', $document['id'])->update([
-                            'type' => $document['type'],
-                        ]);
+                    if ($this->isEditMode && $this->learner?->picture_path) {
+                        Storage::disk('s3')->delete($this->learner->picture_path);
                     }
+
+                    $picturePath = $this->picture->store('profile-pictures', 's3');
+                } else {
+                    $picturePath = $this->isEditMode
+                        ? $this->learner->picture_path
+                        : null;
                 }
 
-                session()->flash('success', 'Learner information updated successfully!');
-            } else {
-                $user = User::create($data);
+                $data = [
+                    'uli' => $this->uli,
+                    'school_name' => $this->school_name,
+                    'school_address' => $this->school_address,
+                    'client_type' => $this->client_type,
+                    'registration_type' => $this->registration_type,
+                    'picture_path' => $picturePath,
 
-                if ($user) {
+                    'sex' => $this->sex,
+                    'civil_status' => $this->civil_status,
+                    'birth_date' => $this->birth_date,
+                    'birth_place' => $this->birth_place,
+                    'mother_name' => $this->mother_name,
+                    'father_name' => $this->father_name,
+
+                    'address_number_street' => $this->address_number_street,
+                    'address_barangay' => $this->address_barangay,
+                    'address_district' => $this->address_district,
+                    'address_city' => $this->address_city,
+                    'address_province' => $this->address_province,
+                    'address_region' => $this->address_region,
+                    'address_zip_code' => $this->address_zip_code,
+
+                    'contact_mobile' => $this->contact_mobile,
+                    'contact_tel' => $this->contact_tel,
+                    'contact_email' => $this->contact_email,
+                    'contact_fax' => $this->contact_fax,
+                    'contact_others' => $this->contact_others,
+
+                    'educational_attainment' => $this->educational_attainment,
+                    'educational_attainment_others' => $this->educational_attainment_others,
+                    'employment_status' => $this->employment_status,
+
+                    'work_experiences' => !empty($this->work_experiences) ? json_encode($this->work_experiences) : null,
+                    'trainings' => !empty($this->trainings) ? json_encode($this->trainings) : null,
+                    'licensure_examination' => !empty($this->licensure_examination) ? json_encode($this->licensure_examination) : null,
+                    'competency_assessment' => !empty($this->competency_assessment) ? json_encode($this->competency_assessment) : null,
+
+                    'agreed_to_terms' => $this->agreedToTerms,
+                ];
+
+                if ($this->isEditMode) {
+
+                    $this->learner->update($data);
+
                     foreach ($this->documents as $document) {
-                        if (isset($document['file']) && is_object($document['file'])) {
+
+                        $isNewFile = isset($document['file']) &&
+                            $document['file'] instanceof TemporaryUploadedFile;
+
+                        if ($isNewFile) {
+
                             $filePath = $document['file']->store('learner-documents', 's3');
+
+                            if (isset($document['id'])) {
+
+                                $existing = UserDocument::find($document['id']);
+
+                                if ($existing && $existing->file) {
+                                    Storage::disk('s3')->delete($existing->file);
+                                }
+
+                                $existing?->update([
+                                    'type' => $document['type'],
+                                    'file' => $filePath,
+                                ]);
+                            } else {
+
+                                UserDocument::create([
+                                    'user_id' => $this->learner->id,
+                                    'type' => $document['type'],
+                                    'file' => $filePath,
+                                ]);
+                            }
+                        } elseif (isset($document['id'])) {
+
+                            UserDocument::where('id', $document['id'])
+                                ->update(['type' => $document['type']]);
+                        }
+                    }
+
+                    session()->flash('success', 'Learner information updated successfully!');
+                } else {
+
+                    $user = User::create($data);
+
+                    foreach ($this->documents as $document) {
+
+                        if (
+                            isset($document['file']) &&
+                            $document['file'] instanceof TemporaryUploadedFile
+                        ) {
+
+                            $filePath = $document['file']->store('learner-documents', 's3');
+
                             UserDocument::create([
                                 'user_id' => $user->id,
                                 'type' => $document['type'],
@@ -492,14 +440,15 @@ class LearnerLivewire extends Component
                             ]);
                         }
                     }
-                }
 
-                session()->flash('success', 'Learner registered successfully!');
-                return redirect()->route('learners.index');
-            }
+                    session()->flash('success', 'Learner registered successfully!');
+                    redirect()->route('learners.index')->send();
+                }
+            });
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Exception $e) {
+            report($e);
             session()->flash('danger', $e->getMessage());
         }
     }
