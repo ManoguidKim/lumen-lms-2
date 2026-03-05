@@ -189,6 +189,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/learner-applications/centers', [RegisterLearnerApplicationController::class, 'getCenters'])->name('learner-applications.getCenters');
     Route::get('/learner-applications/batches', [RegisterLearnerApplicationController::class, 'getBatches'])->name('learner-applications.getBatches');
 
+    Route::get('/learner-applications/registered/{uuid}/edit', [RegisterLearnerApplicationController::class, 'edit'])->name('update-registered-learner.edit');
+    Route::put('/learner-applications/registered/{uuid}', [RegisterLearnerApplicationController::class, 'update'])->name('update-registered-learner.update');
+
 
 
     Route::redirect('settings', 'settings/profile');
