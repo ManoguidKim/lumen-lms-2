@@ -87,7 +87,7 @@
                     <!-- Brand Name -->
                     <div class="mb-8">
                          <h2 class="text-6xl lg:text-7xl font-black text-yellow-400 text-shadow">
-                              LUMEN GENERATION
+                              LUMEN GROUP
                          </h2>
                          <div class="h-1 w-64 bg-yellow-400 mt-4 rounded-full"></div>
                     </div>
@@ -133,7 +133,7 @@
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                <div class="text-center">
                     <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                         Why Choose Lumen Generation?
+                         Why Choose Lumen Group?
                     </h2>
                     <p class="text-xl text-gray-600">
                          Building the future of Filipino excellence, one skill at a time.

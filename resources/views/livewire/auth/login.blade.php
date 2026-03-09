@@ -45,12 +45,12 @@
                                     d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                             </svg>
                         </div>
-                        <h1 class="text-4xl lg:text-5xl font-bold mb-2 text-glow">LUMEN GENERATION</h1>
+                        <h1 class="text-4xl lg:text-5xl font-bold mb-2 text-glow">LUMEN GROUP</h1>
                         <div class="w-20 h-1 bg-white/60 rounded-full mx-auto lg:mx-0 mb-6"></div>
                     </div>
 
                     <h2 class="text-xl lg:text-2xl font-semibold text-blue-100 text-glow">
-                        LUMEN GENERATION
+                        LUMEN GROUP
                     </h2>
                     <h2 class="text-xl lg:text-2xl font-semibold mb-4 text-blue-100 text-glow">
                         Empowering Filipinos with High-Value Skills
@@ -128,7 +128,7 @@
                                     placeholder="juan.tamad@gmail.com">
                             </div>
                             @error('email')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -149,7 +149,7 @@
                                     placeholder="••••••••">
                             </div>
                             @error('password')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -166,8 +166,8 @@
                                 </div>
                             </div>
                             @if (Route::has('password.request'))
-                                <a href="{{ route('password.request') }}" wire:navigate
-                                    class="text-sm font-medium text-blue-600 hover:underline">Forgot password?</a>
+                            <a href="{{ route('password.request') }}" wire:navigate
+                                class="text-sm font-medium text-blue-600 hover:underline">Forgot password?</a>
                             @endif
                         </div>
 
@@ -180,13 +180,13 @@
 
                     <!-- Sign Up Link -->
                     @if (Route::has('register'))
-                        <p class="mt-6 text-sm text-center text-gray-600">
-                            Don't have an account?
-                            <a href="{{ route('register') }}" wire:navigate
-                                class="font-medium text-blue-600 hover:underline">
-                                Sign up
-                            </a>
-                        </p>
+                    <p class="mt-6 text-sm text-center text-gray-600">
+                        Don't have an account?
+                        <a href="{{ route('register') }}" wire:navigate
+                            class="font-medium text-blue-600 hover:underline">
+                            Sign up
+                        </a>
+                    </p>
                     @endif
 
                     <!-- Footer -->
