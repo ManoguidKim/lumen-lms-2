@@ -44,7 +44,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <h1 class="text-4xl lg:text-5xl font-bold mb-2">LUMEN GENERATION</h1>
+                        <h1 class="text-4xl lg:text-5xl font-bold mb-2">LUMEN GROUP</h1>
                         <div class="w-20 h-1 bg-white/60 rounded-full mx-auto lg:mx-0 mb-6"></div>
                     </div>
 
@@ -115,15 +115,15 @@
 
                     <!-- Session Status -->
                     @if (session('status'))
-                        <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 flex items-start gap-3">
-                            <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor"
-                                viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <p class="text-sm text-green-700">{{ session('status') }}</p>
-                        </div>
+                    <div class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="text-sm text-green-700">{{ session('status') }}</p>
+                    </div>
                     @endif
 
                     <!-- Form -->
@@ -149,7 +149,7 @@
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 transition duration-150 ease-in-out @error('email') border-red-500 @enderror">
                             </div>
                             @error('email')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -179,7 +179,7 @@
                                 </button>
                             </div>
                             @error('password')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -210,7 +210,7 @@
                                 </button>
                             </div>
                             @error('password_confirmation')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 

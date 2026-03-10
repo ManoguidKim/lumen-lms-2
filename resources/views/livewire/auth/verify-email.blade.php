@@ -5,9 +5,12 @@
         </flux:text>
 
         @if (session('status') == 'verification-link-sent')
-            <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
-                {{ __('A new verification link has been sent to the email address you provided during registration.') }}
-            </flux:text>
+        <flux:text class="text-center font-medium !dark:text-green-400 !text-green-600">
+            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        </flux:text>
+        <flux:text class="text-center text-sm !dark:text-yellow-400 !text-yellow-600 mt-1">
+            {{ __("Can't find it? Please also check your spam or junk folder.") }}
+        </flux:text>
         @endif
 
         <div class="flex flex-col items-center justify-between space-y-3">
