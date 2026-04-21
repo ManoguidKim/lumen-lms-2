@@ -5,7 +5,7 @@ namespace Modules\CourseAdministration\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TrainingRequirementController extends Controller
+class StudentTrainingEvaluationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -53,10 +53,4 @@ class TrainingRequirementController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id) {}
-
-
-    public function trainingRequirements($uuid)
-    {
-        return view('courseadministration.training_requirements.index', compact('uuid'));
-    }
 }

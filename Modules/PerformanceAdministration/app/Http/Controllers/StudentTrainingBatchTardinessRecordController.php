@@ -1,18 +1,18 @@
 <?php
 
-namespace Modules\CourseAdministration\Http\Controllers;
+namespace Modules\PerformanceAdministration\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TrainingRequirementController extends Controller
+class StudentTrainingBatchTardinessRecordController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('courseadministration::index');
+        return view('performanceadministration::index');
     }
 
     /**
@@ -20,7 +20,7 @@ class TrainingRequirementController extends Controller
      */
     public function create()
     {
-        return view('courseadministration::create');
+        return view('performanceadministration::create');
     }
 
     /**
@@ -33,7 +33,7 @@ class TrainingRequirementController extends Controller
      */
     public function show($id)
     {
-        return view('courseadministration::show');
+        return view('performanceadministration::show');
     }
 
     /**
@@ -41,7 +41,7 @@ class TrainingRequirementController extends Controller
      */
     public function edit($id)
     {
-        return view('courseadministration::edit');
+        return view('performanceadministration::edit');
     }
 
     /**
@@ -53,10 +53,4 @@ class TrainingRequirementController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id) {}
-
-
-    public function trainingRequirements($uuid)
-    {
-        return view('courseadministration.training_requirements.index', compact('uuid'));
-    }
 }

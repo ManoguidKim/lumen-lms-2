@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LearnerController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -15,9 +16,11 @@ use Modules\CourseAdministration\Http\Controllers\TrainingBatchController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchScheduleItemController;
 use Modules\CourseAdministration\Http\Controllers\TrainingBatchStudentController;
 use Modules\CourseAdministration\Http\Controllers\TrainingCourseController;
+use Modules\CourseAdministration\Http\Controllers\TrainingRequirementController;
 use Modules\CourseAdministration\Http\Controllers\TrainingScheduleItemController;
 use Modules\Institution\Http\Controllers\CenterController;
 use Modules\Institution\Http\Controllers\TrainerCenterController;
+use Modules\PerformanceAdministration\Http\Controllers\EvaluationController;
 use Modules\PerformanceAdministration\Http\Controllers\StudentBatchAttendanceController;
 
 Route::get('/', function () {
@@ -71,6 +74,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/training-courses/{uuid}/delete', [TrainingCourseController::class, 'destroy'])->name('training_courses.destroy');
 
     Route::get('/training-courses/{uuid}/select-center', [TrainingCourseController::class, 'selectCenter'])->name('training_courses.select_center');
+    // ---- Training Requirements ----
+    Route::get('/training-courses/{uuid}/requirements', [TrainingRequirementController::class, 'trainingRequirements'])->name('training_courses.requirements');
 
 
 
@@ -114,10 +119,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/training-student-activities', [TrainingActivityController::class, 'index'])->name('training_student_activities.index');
 
 
-    // Perfomance Administration Module Routes
+    // ---- Perfomance Administration Module Routes ----
     Route::get('training_student_batch_attendances', [StudentBatchAttendanceController::class, 'index'])->name('training_student_batch_attendances.index');
     Route::get('training_student_batch_attendances/create/{trainingBatchUuid}', [StudentBatchAttendanceController::class, 'createStudentAttendance'])->name('training_student_batch_attendances.create');
+
     Route::get('training_student_batch_attendances/report/{trainingBatchUuid}', [StudentBatchAttendanceController::class, 'studentAttendanceReport'])->name('training_student_batch_attendances.report');
+    // Evaluation
+    Route::get('training-evaluation/{uuid}', [EvaluationController::class, 'trainingEvaluation'])->name('training_evaluation.index');
+    Route::get('training-evaluation/create/{batchStudentId}', [EvaluationController::class, 'create'])->name('training_evaluation.create');
+
 
 
     // User Routes
@@ -191,6 +201,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/learner-applications/registered/{uuid}/edit', [RegisterLearnerApplicationController::class, 'edit'])->name('update-registered-learner.edit');
     Route::put('/learner-applications/registered/{uuid}', [RegisterLearnerApplicationController::class, 'update'])->name('update-registered-learner.update');
+
+
+    // Statistics Route
+    Route::get('/statistics/students', [StatisticController::class, 'studentStats'])->name('statistics.students');
 
 
 

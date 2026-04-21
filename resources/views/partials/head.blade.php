@@ -11,13 +11,5 @@
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
-<script>
-     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
-     } else {
-          document.documentElement.classList.remove('dark')
-     }
-</script>
-
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance

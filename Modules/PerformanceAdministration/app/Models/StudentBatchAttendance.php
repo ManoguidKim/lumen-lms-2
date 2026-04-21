@@ -19,8 +19,10 @@ class StudentBatchAttendance extends Model
         'training_batch_student_id',
         'training_batch_schedule_item_id',
         'attendance_date',
-        'check_in_time',
-        'check_out_time',
+        'first_check_in_time',
+        'first_check_out_time',
+        'second_check_in_time',
+        'second_check_out_time',
     ];
 
     // protected static function newFactory(): StudentBatchAttendanceFactory

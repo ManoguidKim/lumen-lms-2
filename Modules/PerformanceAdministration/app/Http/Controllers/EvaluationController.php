@@ -1,26 +1,31 @@
 <?php
 
-namespace Modules\CourseAdministration\Http\Controllers;
+namespace Modules\PerformanceAdministration\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Modules\CourseAdministration\Models\TrainingBatch;
+use Modules\CourseAdministration\Models\TrainingBatchStudent;
+use Modules\CourseAdministration\Models\TrainingCourse;
+use Modules\CourseAdministration\Models\TrainingRequirement;
 
-class TrainingRequirementController extends Controller
+class EvaluationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('courseadministration::index');
+        return view('performanceadministration::index');
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($batchStudentId)
     {
-        return view('courseadministration::create');
+        return view('performanceadministration.evaluation.student-evaluation', compact('batchStudentId'));
     }
 
     /**
@@ -33,7 +38,7 @@ class TrainingRequirementController extends Controller
      */
     public function show($id)
     {
-        return view('courseadministration::show');
+        return view('performanceadministration::show');
     }
 
     /**
@@ -41,7 +46,7 @@ class TrainingRequirementController extends Controller
      */
     public function edit($id)
     {
-        return view('courseadministration::edit');
+        return view('performanceadministration::edit');
     }
 
     /**
@@ -54,9 +59,8 @@ class TrainingRequirementController extends Controller
      */
     public function destroy($id) {}
 
-
-    public function trainingRequirements($uuid)
+    public function trainingEvaluation($uuid)
     {
-        return view('courseadministration.training_requirements.index', compact('uuid'));
+        return view('performanceadministration.evaluation.index', compact('uuid'));
     }
 }

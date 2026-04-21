@@ -1,359 +1,489 @@
-<div>
-    <!-- resources/views/livewire/dashboard/card-dashboard-livewire.blade.php -->
-    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+<div class="space-y-6">
+    {{-- KPI CARDS --}}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 xl:grid-cols-3">
 
-        <!-- Citizen -->
-        <div class="w-full">
-            <div class="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:scale-[1.02] relative min-h-32">
+        {{-- Learners --}}
+        <div class="relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+            <div wire:loading wire:target="render" class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+                <div class="space-y-3 text-center">
+                    <div class="mx-auto h-10 w-10 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-3 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-8 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                </div>
+            </div>
 
-                <!-- Loading Skeleton -->
-                <div wire:loading wire:target="render" class="absolute inset-0 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center z-10">
-                    <div class="flex flex-col items-center gap-3 w-full p-5">
-                        <div class="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-xl animate-pulse"></div>
-                        <div class="w-24 h-4 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
-                        <div class="w-16 h-8 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
+            <div wire:loading.remove wire:target="render">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-500 dark:text-blue-400">
+                            Learners
+                        </p>
+                        <h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ number_format($totalLearners ?? 0) }}
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            Total registered learners
+                        </p>
+                    </div>
+
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z" />
+                        </svg>
                     </div>
                 </div>
 
-                <!-- Content -->
-                <div wire:loading.remove wire:target="render">
-                    <!-- Header -->
-                    <div class="flex flex-col mb-7">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-300 dark:from-blue-900 dark:to-blue-700 rounded-xl flex items-center justify-center shadow-inner">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wide">Learners</h6>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 -mt-0.5">Total registered learners</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Value -->
-                    <p class="text-4xl font-bold text-gray-700 dark:text-white mb-1 leading-none">
-                        {{ 0 }}
-                    </p>
+                <div class="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-blue-50 dark:bg-blue-500/10">
+                    <div class="h-full w-3/4 rounded-full bg-blue-500"></div>
                 </div>
             </div>
         </div>
 
+        {{-- Courses --}}
+        <div class="relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+            <div wire:loading wire:target="render" class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+                <div class="space-y-3 text-center">
+                    <div class="mx-auto h-10 w-10 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-3 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-8 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                </div>
+            </div>
 
-        <!-- Household -->
-        <div class="w-full">
-            <div class="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:scale-[1.02] relative min-h-32">
+            <div wire:loading.remove wire:target="render">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-500 dark:text-emerald-400">
+                            Courses
+                        </p>
+                        <h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ number_format($totalCourses ?? 0) }}
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            Total registered courses
+                        </p>
+                    </div>
 
-                <!-- Loading Skeleton -->
-                <div wire:loading wire:target="render" class="absolute inset-0 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center z-10">
-                    <div class="flex flex-col items-center gap-3 w-full p-5">
-                        <div class="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-xl animate-pulse"></div>
-                        <div class="w-24 h-4 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
-                        <div class="w-16 h-8 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 1.293a1 1 0 00-1.414 0l-8 8a1 1 0 001.414 1.414L3 10.414V18a2 2 0 002 2h3a1 1 0 001-1v-4h2v4a1 1 0 001 1h3a2 2 0 002-2v-7.586l.293.293a1 1 0 001.414-1.414l-8-8z" />
+                        </svg>
                     </div>
                 </div>
 
-                <!-- Content -->
-                <div wire:loading.remove wire:target="render">
-                    <!-- Header -->
-                    <div class="flex flex-col mb-7">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-green-100 to-green-300 dark:from-green-900 dark:to-green-700 rounded-xl flex items-center justify-center shadow-inner">
-                                <svg class="w-5 h-5 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10.707 1.293a1 1 0 00-1.414 0l-8 8a1 1 0 001.414 1.414L3 10.414V18a2 2 0 002 2h3a1 1 0 001-1v-4h2v4a1 1 0 001 1h3a2 2 0 002-2v-7.586l.293.293a1 1 0 001.414-1.414l-8-8z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wide">Course</h6>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 -mt-0.5">Total registered course</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Value -->
-                    <p class="text-4xl font-bold text-gray-700 dark:text-white mb-1 leading-none">
-                        {{ 0 }}
-                    </p>
+                <div class="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-emerald-50 dark:bg-emerald-500/10">
+                    <div class="h-full w-2/3 rounded-full bg-emerald-500"></div>
                 </div>
             </div>
         </div>
 
+        {{-- Trainings --}}
+        <div class="relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+            <div wire:loading wire:target="render" class="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+                <div class="space-y-3 text-center">
+                    <div class="mx-auto h-10 w-10 animate-pulse rounded-2xl bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-3 w-24 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                    <div class="mx-auto h-8 w-16 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+                </div>
+            </div>
 
-        <!-- Family -->
-        <div class="w-full">
-            <div class="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 hover:scale-[1.02] relative min-h-32">
+            <div wire:loading.remove wire:target="render">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-violet-500 dark:text-violet-400">
+                            Trainings
+                        </p>
+                        <h3 class="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                            {{ number_format($totalTrainings ?? 0) }}
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            Ongoing training batches
+                        </p>
+                    </div>
 
-                <!-- Loading Skeleton -->
-                <div wire:loading wire:target="render" class="absolute inset-0 bg-white dark:bg-gray-800 rounded-lg flex items-center justify-center z-10">
-                    <div class="flex flex-col items-center gap-3 w-full p-5">
-                        <div class="w-10 h-10 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-xl animate-pulse"></div>
-                        <div class="w-24 h-4 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
-                        <div class="w-16 h-8 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded animate-pulse"></div>
+                    <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c1.657 0 3-1.79 3-4s-1.343-4-3-4-3 1.79-3 4 1.343 4 3 4zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-2.5c0-2.33-4.67-3.5-7-3.5zm7-6c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm-1 9v-1.25c0-1.25-2.5-2.25-4-2.25h-.59c.36.53.59 1.14.59 1.75V20h4zm-12 0v-1.75c0-.61.23-1.22.59-1.75H6c-1.5 0-4 .99-4 2.25V20h4z" />
+                        </svg>
                     </div>
                 </div>
 
-                <!-- Content -->
-                <div wire:loading.remove wire:target="render">
-                    <!-- Header -->
-                    <div class="flex flex-col mb-7">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-300 dark:from-purple-900 dark:to-purple-700 rounded-xl flex items-center justify-center shadow-inner">
-                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 12c1.657 0 3-1.79 3-4s-1.343-4-3-4-3 1.79-3 4 1.343 4 3 4zm0 2c-2.33 0-7 1.17-7 3.5V20h14v-2.5c0-2.33-4.67-3.5-7-3.5zm7-6c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm-1 9v-1.25c0-1.25-2.5-2.25-4-2.25h-.59c.36.53.59 1.14.59 1.75V20h4zm-12 0v-1.75c0-.61.23-1.22.59-1.75H6c-1.5 0-4 .99-4 2.25V20h4z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-semibold text-gray-700 dark:text-gray-200 tracking-wide">Trainings</h6>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 -mt-0.5">Total number of ongoing trainings</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Value -->
-                    <p class="text-4xl font-bold text-gray-700 dark:text-white mb-1 leading-none">
-                        {{ 0 }}
-                    </p>
+                <div class="mt-5 h-1.5 w-full overflow-hidden rounded-full bg-violet-50 dark:bg-violet-500/10">
+                    <div class="h-full w-1/2 rounded-full bg-violet-500"></div>
                 </div>
             </div>
         </div>
     </div>
 
     @if (auth()->user()->hasRole('Director'))
-    {{-- Chart Card --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 mb-4">
-
-        {{-- Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800">Monthly Applications</h3>
-                <p class="text-sm text-gray-500 mt-0.5">
-                    Learner applications overview for {{ $selectedYear }}
-                </p>
-            </div>
-
-            {{-- Year Filter --}}
-            <select
-                wire:model.live="selectedYear"
-                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 w-full sm:w-auto">
-                @foreach($availableYears as $year)
-                <option value="{{ $year }}">{{ $year }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Summary Stats --}}
-        <div class="grid grid-cols-3 gap-4 mb-6">
-            <div class="bg-blue-50 rounded-lg p-3 text-center">
-                <p class="text-2xl font-bold text-blue-600">{{ $totalApplications }}</p>
-                <p class="text-xs text-gray-500 mt-1">Total Applications</p>
-            </div>
-            <div class="bg-green-50 rounded-lg p-3 text-center">
-                <p class="text-2xl font-bold text-green-600">{{ $peakMonth }}</p>
-                <p class="text-xs text-gray-500 mt-1">Peak Month</p>
-            </div>
-            <div class="bg-purple-50 rounded-lg p-3 text-center">
-                <p class="text-2xl font-bold text-purple-600">
-                    {{ $totalApplications > 0 ? round($totalApplications / 12, 1) : 0 }}
-                </p>
-                <p class="text-xs text-gray-500 mt-1">Monthly Average</p>
-            </div>
-        </div>
-
-        {{-- Chart --}}
-        <div
-            wire:ignore
-            id="monthlyApplicationChart"
-            style="min-height: 350px;"></div>
-    </div>
-
-
-    {{-- Most Applied Training Courses --}}
-    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div class="w-full">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+    {{-- MAIN ANALYTICS --}}
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        {{-- Monthly Applications Chart --}}
+        <div class="xl:col-span-2 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Most Applied Training Courses</h3>
-                        <p class="text-sm text-gray-500 mt-0.5">Top 1 courses by application count — {{ $selectedYear }}</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            Monthly Applications
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            Learner applications overview for {{ $selectedYear }}
+                        </p>
                     </div>
+
+                    <select
+                        wire:model.live="selectedYear"
+                        class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/10 sm:w-auto">
+                        @foreach($availableYears as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-800 sm:grid-cols-3">
+                <div class="rounded-2xl bg-blue-50 px-4 py-4 dark:bg-blue-500/10">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                        Total Applications
+                    </p>
+                    <p class="mt-2 text-3xl font-bold text-blue-700 dark:text-blue-300">
+                        {{ $totalApplications }}
+                    </p>
                 </div>
 
-                {{-- Top course summary cards --}}
-                @if(count($topCoursesData['series']) > 0)
+                <div class="rounded-2xl bg-emerald-50 px-4 py-4 dark:bg-emerald-500/10">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                        Peak Month
+                    </p>
+                    <p class="mt-2 text-3xl font-bold text-emerald-700 dark:text-emerald-300">
+                        {{ $peakMonth }}
+                    </p>
+                </div>
 
+                <div class="rounded-2xl bg-violet-50 px-4 py-4 dark:bg-violet-500/10">
+                    <p class="text-[11px] font-semibold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+                        Monthly Average
+                    </p>
+                    <p class="mt-2 text-3xl font-bold text-violet-700 dark:text-violet-300">
+                        {{ $totalApplications > 0 ? round($totalApplications / 12, 1) : 0 }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-5">
+                <div class="h-[360px]">
+                    <canvas wire:ignore id="monthlyApplicationChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- Top Courses --}}
+        <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <div class="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Most Applied Courses
+                </h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Top courses by application count — {{ $selectedYear }}
+                </p>
+            </div>
+
+            <div class="space-y-3 p-5">
+                @if(count($topCoursesData['series']) > 0)
                 @foreach(array_slice(array_keys($topCoursesData['series']), 0, 3) as $i)
-                <div class="flex items-center gap-3 p-3 rounded-lg
-            {{ $i === 0 ? 'bg-yellow-50 border border-yellow-100' : ($i === 1 ? 'bg-gray-50 border border-gray-100' : 'bg-orange-50 border border-orange-100') }} mb-2">
-                    <div class="text-2xl font-black
-                {{ $i === 0 ? 'text-yellow-500' : ($i === 1 ? 'text-gray-400' : 'text-orange-400') }}">
+                <div class="flex items-center gap-3 rounded-2xl border px-4 py-3
+                                {{ $i === 0 ? 'border-yellow-200 bg-yellow-50 dark:border-yellow-900/30 dark:bg-yellow-500/10' : ($i === 1 ? 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/60' : 'border-orange-200 bg-orange-50 dark:border-orange-900/30 dark:bg-orange-500/10') }}">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl font-black
+                                    {{ $i === 0 ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-300' : ($i === 1 ? 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : 'bg-orange-100 text-orange-600 dark:bg-orange-500/10 dark:text-orange-300') }}">
                         #{{ $i + 1 }}
                     </div>
-                    <div class="overflow-hidden">
-                        <p class="text-xs font-semibold text-gray-700 truncate">
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate text-sm font-semibold text-gray-800 dark:text-gray-100">
                             {{ $topCoursesData['names'][$i] ?? '' }}
                         </p>
-                        <p class="text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             {{ $topCoursesData['series'][$i] ?? 0 }} applications
                         </p>
                     </div>
                 </div>
                 @endforeach
-            </div>
-            @endif
 
-            <div
-                wire:ignore
-                id="topCoursesChart">
+                <div class="pt-2">
+                    <div class="h-[260px]">
+                        <canvas wire:ignore id="topCoursesChart"></canvas>
+                    </div>
+                </div>
+                @else
+                <div class="flex min-h-[220px] flex-col items-center justify-center text-center">
+                    <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500">
+                        <svg class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-6m3 6V7m3 10v-3m3 7H6a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        No course data available
+                    </p>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Top applied courses will appear here once applications are recorded.
+                    </p>
+                </div>
+                @endif
             </div>
         </div>
     </div>
     @endif
 
+    @once
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @endonce
+
     <script>
         (function() {
-            function renderChart() {
-                if (typeof ApexCharts === 'undefined') {
-                    setTimeout(renderChart, 100);
-                    return;
+            let monthlyChart = null;
+            let topCoursesChart = null;
+
+            const monthLabels = [
+                'January', 'February', 'March', 'April',
+                'May', 'June', 'July', 'August',
+                'September', 'October', 'November', 'December'
+            ];
+
+            function destroyCharts() {
+                if (monthlyChart) {
+                    monthlyChart.destroy();
+                    monthlyChart = null;
                 }
+                if (topCoursesChart) {
+                    topCoursesChart.destroy();
+                    topCoursesChart = null;
+                }
+            }
 
-                const el = document.querySelector('#monthlyApplicationChart');
-                if (!el) return;
+            function renderMonthlyChart() {
+                const el = document.getElementById('monthlyApplicationChart');
+                if (!el || typeof Chart === 'undefined') return;
 
-                const chart = new ApexCharts(el, {
-                    series: [{
-                        name: 'Applications',
-                        data: @json($monthlyData)
-                    }],
-                    chart: {
-                        type: 'bar',
-                        height: 350,
-                        toolbar: {
-                            show: false
-                        },
-                        fontFamily: 'Inter, sans-serif',
-                        animations: {
-                            enabled: true,
-                            easing: 'easeinout',
-                            speed: 600
-                        }
+                monthlyChart = new Chart(el, {
+                    type: 'bar',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'Applications',
+                            data: @json($monthlyData),
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 8,
+                            borderSkipped: false,
+                            maxBarThickness: 42,
+                        }]
                     },
-                    colors: ['#3b82f6'],
-                    plotOptions: {
-                        bar: {
-                            borderRadius: 6,
-                            columnWidth: '55%',
-                            dataLabels: {
-                                position: 'top'
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
                             },
-                            colors: {
-                                ranges: [{
-                                    from: 0,
-                                    to: 0,
-                                    color: '#e5e7eb'
-                                }]
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.parsed.y} application(s)`;
+                                    }
+                                }
                             }
-                        }
-                    },
-                    dataLabels: {
-                        enabled: true,
-                        offsetY: -22,
-                        style: {
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            colors: ['#374151']
                         },
-                        formatter: val => val > 0 ? val : ''
-                    },
-                    xaxis: {
-                        categories: [
-                            'January', 'February', 'March', 'April',
-                            'May', 'June', 'July', 'August',
-                            'September', 'October', 'November', 'December'
-                        ],
-                        axisBorder: {
-                            show: false
-                        },
-                        axisTicks: {
-                            show: false
-                        },
-                        labels: {
-                            rotate: -45,
-                            style: {
-                                colors: '#6b7280',
-                                fontSize: '12px'
-                            }
-                        }
-                    },
-                    yaxis: {
-                        min: 0,
-                        forceNiceScale: true,
-                        labels: {
-                            style: {
-                                colors: '#6b7280',
-                                fontSize: '12px'
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#6b7280',
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
                             },
-                            formatter: val => Math.floor(val)
-                        }
-                    },
-                    grid: {
-                        borderColor: '#f3f4f6',
-                        strokeDashArray: 4,
-                        yaxis: {
-                            lines: {
-                                show: true
-                            }
-                        },
-                        xaxis: {
-                            lines: {
-                                show: false
-                            }
-                        },
-                        padding: {
-                            top: 10,
-                            bottom: 0
-                        }
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: val => val + ' application(s)'
-                        },
-                        x: {
-                            formatter: (val, {
-                                dataPointIndex
-                            }) => {
-                                const months = [
-                                    'January', 'February', 'March', 'April',
-                                    'May', 'June', 'July', 'August',
-                                    'September', 'October', 'November', 'December'
-                                ];
-                                return months[dataPointIndex] + ' {{ $selectedYear }}';
-                            }
-                        }
-                    },
-                    states: {
-                        hover: {
-                            filter: {
-                                type: 'darken',
-                                value: 0.85
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    precision: 0,
+                                    color: '#6b7280'
+                                },
+                                grid: {
+                                    color: '#f3f4f6'
+                                }
                             }
                         }
                     }
                 });
+            }
 
-                chart.render();
+            function renderTopCoursesChart() {
+                const el = document.getElementById('topCoursesChart');
+                if (!el || typeof Chart === 'undefined') return;
 
-                window.addEventListener('chartDataUpdated', event => {
-                    chart.updateSeries([{
-                        name: 'Applications',
-                        data: event.detail.data
-                    }]);
+                const labels = @json($topCoursesData['names'] ?? []);
+                const data = @json($topCoursesData['series'] ?? []);
+
+                if (!labels.length) return;
+
+                topCoursesChart = new Chart(el, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                '#f59e0b',
+                                '#6366f1',
+                                '#10b981',
+                                '#ef4444',
+                                '#8b5cf6'
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '68%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 12,
+                                    color: '#6b7280',
+                                    padding: 16
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.parsed} application(s)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 });
             }
 
-            renderChart();
+            function renderCharts() {
+                destroyCharts();
+                renderMonthlyChart();
+                renderTopCoursesChart();
+            }
+
+            document.addEventListener('DOMContentLoaded', renderCharts);
+
+            document.addEventListener('livewire:navigated', renderCharts);
+
+            window.addEventListener('chartDataUpdated', function(event) {
+                destroyCharts();
+
+                const monthlyData = event.detail.data ?? @json($monthlyData);
+                const topNames = event.detail.topCourseNames ?? @json($topCoursesData['names'] ?? []);
+                const topSeries = event.detail.topCourseSeries ?? @json($topCoursesData['series'] ?? []);
+
+                const monthlyEl = document.getElementById('monthlyApplicationChart');
+                if (monthlyEl && typeof Chart !== 'undefined') {
+                    monthlyChart = new Chart(monthlyEl, {
+                        type: 'bar',
+                        data: {
+                            labels: monthLabels,
+                            datasets: [{
+                                label: 'Applications',
+                                data: monthlyData,
+                                backgroundColor: '#3b82f6',
+                                borderRadius: 8,
+                                borderSkipped: false,
+                                maxBarThickness: 42,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.parsed.y} application(s)`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        color: '#6b7280',
+                                        maxRotation: 45,
+                                        minRotation: 45
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        precision: 0,
+                                        color: '#6b7280'
+                                    },
+                                    grid: {
+                                        color: '#f3f4f6'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                const topEl = document.getElementById('topCoursesChart');
+                if (topEl && typeof Chart !== 'undefined' && topNames.length) {
+                    topCoursesChart = new Chart(topEl, {
+                        type: 'doughnut',
+                        data: {
+                            labels: topNames,
+                            datasets: [{
+                                data: topSeries,
+                                backgroundColor: [
+                                    '#f59e0b',
+                                    '#6366f1',
+                                    '#10b981',
+                                    '#ef4444',
+                                    '#8b5cf6'
+                                ],
+                                borderWidth: 0,
+                                hoverOffset: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '68%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 12,
+                                        color: '#6b7280',
+                                        padding: 16
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${context.parsed} application(s)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
         })();
     </script>
 </div>
