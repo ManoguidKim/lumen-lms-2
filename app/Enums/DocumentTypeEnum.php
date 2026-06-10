@@ -12,6 +12,7 @@ enum DocumentTypeEnum: string
     case Barangay = 'barangay_clearance';
     case PoliceClereance = 'police_clearance';
     case NBI = 'nbi_clearance';
+    case ValidID = 'valid_id';
 
     public function label(): string
     {
@@ -24,6 +25,7 @@ enum DocumentTypeEnum: string
             self::Barangay          => 'Barangay Clearance',
             self::PoliceClereance   => 'Police Clearance',
             self::NBI               => 'NBI Clearance',
+            self::ValidID           => 'Valid ID',
         };
     }
 }
